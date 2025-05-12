@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 /**
  * Custom hook to perform a GET request using the provided adminService.
@@ -12,18 +12,17 @@ import { useState } from "react";
  * @returns {boolean} fetchLoading - A boolean representing the loading state of the request.
  * @returns {string|null} fetchError - An error message if the request fails, or null if no error.
  */
-export const useAxiosGet = ({ adminService, page = undefined }) => {
+export const useAxiosGet = ({ adminService, params = {} }) => {
     const [data, setData] = useState(null);
     const [fetchError, setFetchError] = useState(null);
-    const [fetchLoading, setFetchLoading] = useState(false);
+    const [fetchLoading, setFetchLoading] = useState(true);
 
     useEffect(() => {
         setFetchError(null);
-        setFetchLoading(true);
 
         const fetchData = async () => {
             try {
-                const response = await adminService({ page });
+                const response = await adminService(params);
 
                 setData(response.data || null);
             } catch (error) {

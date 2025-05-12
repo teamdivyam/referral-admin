@@ -37,7 +37,7 @@ export function AppSidebar() {
     return (
         <Sidebar>
             <SidebarHeader>
-                <h1 className="py-5 text-center text-xl text-sidebar-primary md:text-2xl lg:text-3xl">
+                <h1 className="py-5 text-center text-xl text-cs-foreground-primary md:text-2xl lg:text-3xl">
                     <span className="font-bold">Divyam</span>&nbsp;
                     <span className="">Admin</span>
                 </h1>
@@ -58,7 +58,7 @@ export function AppSidebar() {
                                             onClick={() => {
                                                 setActivePageIndex(index);  
                                             }}
-                                            className="text-sidebar-menu-item data-[active=true]:text-sidebar-primary data-[active=false]:hover:text-sidebar-primary"
+                                            className="text-cs-foreground-secondary data-[active=true]:text-sidebar-primary data-[active=false]:hover:text-sidebar-primary"
                                         >
                                             <item.icon />
                                             <span>{item.title}</span>

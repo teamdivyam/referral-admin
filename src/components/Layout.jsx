@@ -21,26 +21,26 @@ export default function Layout() {
     return (
         <SidebarProvider>
             <AppSidebar />
-            <main className="w-full min-h-screen bg-primary-background">
+            <main className="w-full min-h-screen bg-cs-background-primary">
                 <div className="md:hidden">
                     <SidebarTrigger />
                 </div>
                 <div className="px-6 py-2 md:pt-8">
                     <div className="flex justify-between items-start pb-12">
                         <div className="flex flex-col gap-1">
-                            <div className="hidden text-sm text-foreground-first md:block">
+                            <div className="hidden text-sm text-cs-foreground-secondary md:block">
                                 Pages / {loc}
                             </div>
-                            <div className="text-3xl font-semibold text-sidebar-primary">
+                            <div className="text-3xl font-semibold text-cs-foreground-primary">
                                 {pageHeaders[loc.toLowerCase()]}
                             </div>
                         </div>
-                        <div className="hidden bg-white rounded-full shadow-sm px-6 py-1.5 items-center gap-3.5 md:flex">
-                            <Link to="/">
+                        <div className="hidden bg-cs-background-secondary rounded-full shadow-sm px-6 py-1.5 items-center gap-3.5 md:flex">
+                            <Link to="/" className="text-cs-foreground-secondary">
                                 <Bell className="size-4" />
                             </Link>
 
-                            <Link to="/">
+                            <Link to="/" className="text-cs-foreground-secondary">
                                 <Info className="size-4" />
                             </Link>
 
