@@ -11,7 +11,7 @@ import {
 export default function DataTable({ table }) {
     return (
         <>
-            <Table className="mt-4 bg-cs-background-secondary rounded-md max-h-[540px] overflow-y-auto relative">
+            <Table className="mt-4 bg-cs-background-secondary rounded-md max-h-[540px] relative">
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>

@@ -1,8 +1,4 @@
 import { createColumnHelper } from "@tanstack/react-table";
-
-const columnHelper = createColumnHelper();
-
-import Filter from "./Filter";
 import { ChevronsUpDown, MoreHorizontal } from "lucide-react";
 import {
     DropdownMenu,
@@ -14,6 +10,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import SummaryDrawer from "./Summary";
+import ViewDetailDrawer from "./ViewDetailDrawer";
+import DeactivateAccountAlert from "./DeactivateAccountDialog";
+import ActivateAccountAlert from "./ActivateAccountAlert";
+import AssignReferralCodeDialog from "./AssignReferralCodeDialog";
+
+const columnHelper = createColumnHelper();
 
 export const columns = [
     columnHelper.accessor("name", {
@@ -24,9 +26,7 @@ export const columns = [
                         <span>Name</span>
                     </div>
                     {column.column.getCanFilter() ? (
-                        <div>
-                            {/* <Filter column={column.column} /> */}
-                        </div>
+                        <div>{/* <Filter column={column.column} /> */}</div>
                     ) : null}
                 </>
             );
@@ -107,14 +107,45 @@ export const columns = [
                             >
                                 <SummaryDrawer id={agent._id} />
                             </DropdownMenuItem>
-                            <DropdownMenuItem>View Details</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => {}}>
-                                Assign Referral Code
+                            <DropdownMenuItem
+                                onSelect={(e) => {
+                                    e.preventDefault();
+                                }}
+                            >
+                                <ViewDetailDrawer id={agent._id} />
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-red-600">
-                                Deactivate Account
+                            <DropdownMenuItem
+                                onSelect={(e) => {
+                                    e.preventDefault();
+                                }}
+                            >
+                                <AssignReferralCodeDialog
+                                    agentId={agent._id}
+                                    name={agent.name}
+                                />
                             </DropdownMenuItem>
+                            {agent.accountStatus === "activate" ? (
+                                <DropdownMenuItem
+                                    className="text-red-600"
+                                    onSelect={(e) => {
+                                        e.preventDefault();
+                                    }}
+                                >
+                                    <DeactivateAccountAlert
+                                        agentId={agent._id}
+                                    />
+                                </DropdownMenuItem>
+                            ) : (
+                                <DropdownMenuItem
+                                    className="text-red-600"
+                                    onSelect={(e) => {
+                                        e.preventDefault();
+                                    }}
+                                >
+                                    <ActivateAccountAlert agentId={agent._id} />
+                                </DropdownMenuItem>
+                            )}
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

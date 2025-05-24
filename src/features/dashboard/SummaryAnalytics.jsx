@@ -1,3 +1,7 @@
+import LoadingCircle from "../../components/loading-circle";
+import AdminService from "../../services/admin.service";
+
+import { useQuery } from "@tanstack/react-query";
 import {
     Activity,
     Calendar,
@@ -7,7 +11,25 @@ import {
     Users,
 } from "lucide-react";
 
+const fetchSummaryAnalytics = async () => {
+    try {
+        const response = await AdminService.dashboardAnalytics();
+
+        return response.data;
+    } catch (error) {
+        console.error(
+            "Error in fetching summary analytics:",
+            error.response?.data?.error?.message || "fetch error"
+        );
+    }
+};
+
 export default function SummaryAnalytics() {
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ["summaryAnalytics"],
+        queryFn: fetchSummaryAnalytics,
+    });
+
     return (
         <>
             <div className="flex px-2.5 py-4.5 gap-5.5 bg-cs-background-secondary rounded-lg shadow-sm">
@@ -19,7 +41,7 @@ export default function SummaryAnalytics() {
                         Total Agents
                     </span>
                     <span className="text-2xl font-semibold text-sidebar-primary">
-                        4669
+                        {isLoading ? <LoadingCircle /> : data.totalNumberOfAgents}
                     </span>
                 </div>
             </div>
@@ -32,7 +54,7 @@ export default function SummaryAnalytics() {
                         Active Codes
                     </span>
                     <span className="text-2xl font-semibold text-sidebar-primary">
-                        287
+                        {isLoading ? <LoadingCircle /> : data.activeReferralCodes}
                     </span>
                 </div>
             </div>
@@ -45,7 +67,7 @@ export default function SummaryAnalytics() {
                         Total Paid
                     </span>
                     <span className="text-2xl font-semibold text-sidebar-primary">
-                        25,678
+                        {isLoading ? <LoadingCircle /> : data.totalPaidToAgents}
                     </span>
                 </div>
             </div>
@@ -58,7 +80,7 @@ export default function SummaryAnalytics() {
                         Withdrawal Request
                     </span>
                     <span className="text-2xl font-semibold text-sidebar-primary">
-                        125
+                        {isLoading ? <LoadingCircle /> : data.totalLatestWithdrawalRequest}
                     </span>
                 </div>
             </div>
@@ -84,7 +106,7 @@ export default function SummaryAnalytics() {
                         Total Order Via Referral
                     </span>
                     <span className="text-2xl font-semibold text-sidebar-primary">
-                        4669
+                        {isLoading ? <LoadingCircle /> : data.totalOrdersCompleted}
                     </span>
                 </div>
             </div>

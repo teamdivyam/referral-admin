@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
  * @returns {boolean} fetchLoading - A boolean representing the loading state of the request.
  * @returns {string|null} fetchError - An error message if the request fails, or null if no error.
  */
-export const useAxiosGet = ({ adminService, params = {} }) => {
+export const useAxiosGet = ({ adminService, params = {}, dependency = [] }) => {
     const [data, setData] = useState(null);
     const [fetchError, setFetchError] = useState(null);
     const [fetchLoading, setFetchLoading] = useState(true);
@@ -38,7 +38,7 @@ export const useAxiosGet = ({ adminService, params = {} }) => {
         };
 
         fetchData();
-    }, []);
+    }, dependency);
 
     return { data, fetchLoading, fetchError };
 };

@@ -6,7 +6,6 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarGroup,
-    SidebarGroupLabel,
     SidebarGroupContent,
 } from "@/components/ui/sidebar";
 import { Home, Settings, Users } from "lucide-react";
