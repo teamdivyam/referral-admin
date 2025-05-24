@@ -44,18 +44,17 @@ export default function DeactivateAccountAlert({ agentId }) {
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>
-                        Are you absolutely sure?
+                        Deactivate Account Confirmation ?
                     </AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete your account and remove your data from our
-                        servers.
+                        This action is used to deactivate the activate agent
+                        account.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction onClick={handleClick}>
-                        Continue
+                        Confirm
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
