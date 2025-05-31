@@ -20,8 +20,8 @@ import {
 import ApprovedWithdrawalRequestAlert from "./ApprovedWithdrawalRequestAlert";
 import RejectWithdrawalRequestAlert from "./RejectWithdrawalRequestAlert";
 
-export default function LatestWithdrawalRequestTable({ agent }) {
-    const latestWithdrawalRequest = agent.wallet.withdrawalHistory.filter(
+export default function LatestWithdrawalRequestTable({ referralUser }) {
+    const latestWithdrawalRequest = referralUser.wallet.withdrawals.filter(
         (req) => req.status === "pending"
     );
 
@@ -31,7 +31,6 @@ export default function LatestWithdrawalRequestTable({ agent }) {
                 <TableRow>
                     <TableHead>Date</TableHead>
                     <TableHead>Amount</TableHead>
-                    <TableHead>Order Id</TableHead>
                     <TableHead className="text-right">Action</TableHead>
                 </TableRow>
             </TableHeader>
@@ -39,7 +38,7 @@ export default function LatestWithdrawalRequestTable({ agent }) {
                 {latestWithdrawalRequest.length === 0 ? (
                     <TableRow className="bg-cs-background-secondary">
                         <TableCell colSpan={4} className="h-24 text-center">
-                            No withdrawal request found
+                            No latest withdrawal request found
                         </TableCell>
                     </TableRow>
                 ) : (
@@ -49,11 +48,9 @@ export default function LatestWithdrawalRequestTable({ agent }) {
                             className="bg-cs-background-secondary"
                         >
                             <TableCell className="font-medium">
-                                {request.date}
                                 {format(request.createdAt, "dd/MM/yyyy")}
                             </TableCell>
                             <TableCell>{request.amount}</TableCell>
-                            <TableCell>37856</TableCell>
                             <TableCell>
                                 <div className="flex justify-end">
                                     <DropdownMenu>
@@ -101,3 +98,5 @@ export default function LatestWithdrawalRequestTable({ agent }) {
         </Table>
     );
 }
+
+

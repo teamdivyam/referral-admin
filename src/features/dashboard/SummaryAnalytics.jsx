@@ -41,11 +41,11 @@ export default function SummaryAnalytics() {
                         Total Agents
                     </span>
                     <span className="text-2xl font-semibold text-sidebar-primary">
-                        {isLoading ? <LoadingCircle /> : data.totalNumberOfAgents}
+                        {isLoading ? <LoadingCircle /> : data.totalReferralUser}
                     </span>
                 </div>
             </div>
-            <div className="flex px-2.5 py-4.5 gap-5.5 bg-cs-background-secondary rounded-lg shadow-sm">
+            {/* <div className="flex px-2.5 py-4.5 gap-5.5 bg-cs-background-secondary rounded-lg shadow-sm">
                 <div className="flex justify-center items-center">
                     <Activity className="size-8 text-cs-icon-primary" />
                 </div>
@@ -57,7 +57,7 @@ export default function SummaryAnalytics() {
                         {isLoading ? <LoadingCircle /> : data.activeReferralCodes}
                     </span>
                 </div>
-            </div>
+            </div> */}
             <div className="flex px-2.5 py-4.5 gap-5.5 bg-cs-background-secondary rounded-lg shadow-sm">
                 <div className="flex justify-center items-center">
                     <IndianRupee className="size-8 text-cs-icon-primary" />
@@ -67,7 +67,11 @@ export default function SummaryAnalytics() {
                         Total Paid
                     </span>
                     <span className="text-2xl font-semibold text-sidebar-primary">
-                        {isLoading ? <LoadingCircle /> : data.totalPaidToAgents}
+                        {isLoading ? (
+                            <LoadingCircle />
+                        ) : (
+                            data.totalPaidToReferralUser
+                        )}
                     </span>
                 </div>
             </div>
@@ -80,7 +84,29 @@ export default function SummaryAnalytics() {
                         Withdrawal Request
                     </span>
                     <span className="text-2xl font-semibold text-sidebar-primary">
-                        {isLoading ? <LoadingCircle /> : data.totalLatestWithdrawalRequest}
+                        {isLoading ? (
+                            <LoadingCircle />
+                        ) : (
+                            data.totalLatestWithdrawalRequest
+                        )}
+                    </span>
+                </div>
+            </div>
+
+            <div className="flex px-2.5 py-4.5 gap-5.5 bg-cs-background-secondary rounded-lg shadow-sm">
+                <div className="flex justify-center items-center">
+                    <Sigma className="size-8 text-cs-icon-primary" />
+                </div>
+                <div className="flex flex-col gap-0.5">
+                    <span className="text-sm text-cs-foreground-secondary">
+                        Total Orders Via Referral
+                    </span>
+                    <span className="text-2xl font-semibold text-sidebar-primary">
+                        {isLoading ? (
+                            <LoadingCircle />
+                        ) : (
+                            data.totalOrdersCompleted
+                        )}
                     </span>
                 </div>
             </div>
@@ -94,19 +120,6 @@ export default function SummaryAnalytics() {
                     </span>
                     <span className="text-2xl font-semibold text-sidebar-primary">
                         4669
-                    </span>
-                </div>
-            </div>
-            <div className="flex px-2.5 py-4.5 gap-5.5 bg-cs-background-secondary rounded-lg shadow-sm">
-                <div className="flex justify-center items-center">
-                    <Sigma className="size-8 text-cs-icon-primary" />
-                </div>
-                <div className="flex flex-col gap-0.5">
-                    <span className="text-sm text-cs-foreground-secondary">
-                        Total Order Via Referral
-                    </span>
-                    <span className="text-2xl font-semibold text-sidebar-primary">
-                        {isLoading ? <LoadingCircle /> : data.totalOrdersCompleted}
                     </span>
                 </div>
             </div>

@@ -33,7 +33,6 @@ export default function Login() {
     const onSubmit = async (formValues) => {
         try {
             const response = await postData(formValues);
-            console.log(response.data);
 
             if (response.data.success) {
                 /* Destruct Authorization Token from Response

@@ -66,7 +66,7 @@ export default function Agents() {
     });
 
     const table = useReactTable({
-        data: isSuccess ? dataQuery.agents : [],
+        data: isSuccess ? dataQuery.referralUsers : [],
         columns,
         filterFns: {},
         state: {

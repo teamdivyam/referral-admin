@@ -1,6 +1,6 @@
 import { IndianRupee } from "lucide-react";
 
-export default function AgentSummaryTable({ agent }) {
+export default function AgentSummaryTable({ referralUser }) {
     return (
         <div className="flex flex-col gap-2.5 px-2.5 py-2.5 border rounded-md bg-cs-background-secondary">
             {/* Total Earning Amount */}
@@ -11,7 +11,7 @@ export default function AgentSummaryTable({ agent }) {
                 <span className="flex items-center gap-1">
                     <IndianRupee className="size-3 text-cs-icon-primary" />
                     <span className="text-cs-foreground-secondary">
-                        {agent.wallet.totalEarningAmount}
+                        {referralUser.wallet.totalEarning}
                     </span>
                 </span>
             </div>
@@ -23,7 +23,7 @@ export default function AgentSummaryTable({ agent }) {
                 <span className="flex items-center gap-1">
                     <IndianRupee className="size-3 text-cs-icon-primary" />
                     <span className="text-cs-foreground-secondary">
-                        {agent.wallet.pendingWithdrawalAmount}
+                        0
                     </span>
                 </span>
             </div>
@@ -33,7 +33,7 @@ export default function AgentSummaryTable({ agent }) {
                 <span className="flex items-center gap-1">
                     <IndianRupee className="size-3 text-cs-icon-primary" />
                     <span className="text-cs-foreground-secondary">
-                        {agent.wallet.balance}
+                        {referralUser.wallet.balance}
                     </span>
                 </span>
             </div>
@@ -45,7 +45,7 @@ export default function AgentSummaryTable({ agent }) {
                 <span className="flex items-center gap-1">
                     <IndianRupee className="size-3 text-cs-icon-primary" />
                     <span className="text-cs-foreground-secondary">
-                        {agent.wallet.pendingBalance}
+                        {referralUser.wallet.pendingBalance}
                     </span>
                 </span>
             </div>
@@ -54,8 +54,7 @@ export default function AgentSummaryTable({ agent }) {
                 <span className="text-cs-foreground-primary">Total Refer</span>
                 <span className="flex items-center gap-1">
                     <span className="text-cs-foreground-secondary">
-                        {agent.referral.pending.length +
-                            agent.referral.used.length}
+                        {referralUser.referralEvents.length}
                     </span>
                 </span>
             </div>
@@ -66,18 +65,18 @@ export default function AgentSummaryTable({ agent }) {
                 </span>
                 <span className="flex items-center gap-1">
                     <span className="text-cs-foreground-secondary">
-                        {agent.referral.used.length}
+                        {referralUser.referralEvents.length}
                     </span>
                 </span>
             </div>
             {/* Available Referral Code */}
             <div className="flex justify-between items-center text-sm">
                 <span className="text-cs-foreground-primary">
-                    Available Referral Codes
+                    Referral Code
                 </span>
                 <span className="flex items-center gap-1">
                     <span className="text-cs-foreground-secondary">
-                        {agent.referral.active.length}
+                        {referralUser.referralCode}
                     </span>
                 </span>
             </div>

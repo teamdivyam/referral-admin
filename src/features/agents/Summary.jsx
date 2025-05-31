@@ -19,15 +19,15 @@ import AgentSummaryTable from "./AgentSummaryTable";
 export default function SummaryDrawer({ id }) {
     const fetchAgent = async () => {
         try {
-            const response = await AdminService.agentById(id);
+            const response = await AdminService.referralUserById(id);
 
-            return response.data?.agent;
+            return response.data?.referralUser;
         } catch (error) {
             console.log("Error:", error.message);
         }
     };
 
-    const { data: agent, isLoading } = useQuery({
+    const { data: referralUser, isLoading } = useQuery({
         queryKey: ["agent-summary"],
         queryFn: fetchAgent,
     });
@@ -48,7 +48,7 @@ export default function SummaryDrawer({ id }) {
                         <DrawerHeader>
                             <div className="flex justify-between items-center ">
                                 <DrawerTitle className="text-cs-foreground-primary text-2xl">
-                                    {agent.name}
+                                    {referralUser.user.fullName}
                                 </DrawerTitle>
                                 <DrawerClose asChild>
                                     <Button
@@ -62,34 +62,34 @@ export default function SummaryDrawer({ id }) {
                             <DrawerDescription>
                                 <p className="flex gap-4.5">
                                     <span className="text-cs-foreground-secondary">
-                                        +91 {agent.phoneNumber}
+                                        +91 {referralUser.user.mobileNum}
                                     </span>{" "}
                                     <a
-                                        href={`mailto:${agent.email}`}
+                                        href={`mailto:${referralUser.user.email}`}
                                         className="text-blue-500 hover:underline cursor-pointer"
                                     >
-                                        {agent.email}
+                                        {referralUser.user.email}
                                     </a>{" "}
                                 </p>
                             </DrawerDescription>
                         </DrawerHeader>
 
                         <div className="mt-4.5 mx-4.5">
-                            <AgentSummaryTable agent={agent}/>
+                            <AgentSummaryTable referralUser={referralUser}/>
                         </div>
 
                         <div className="grid grid-cols-2 gap-2.5 my-6.5 mx-4.5">
-                            <div className="flex justify-center border py-1.5 rounded-sm bg-green-300 cursor-pointer">
+                            {/* <div className="flex justify-center border py-1.5 rounded-sm bg-green-300 cursor-pointer">
                                 <AssignReferralCodeDialog
                                     agentId={agent._id}
                                     name={agent.name}
                                 />
-                            </div>
-                            <div className="flex justify-center border py-1.5 rounded-sm bg-yellow-200 cursor-pointer">
+                            </div> */}
+                            {/* <div className="flex justify-center border py-1.5 rounded-sm bg-yellow-200 cursor-pointer">
                                 <span className="text-sm text-cs-foreground-primary">
                                     <ViewDetail id={agent._id}/>
                                 </span>
-                            </div>
+                            </div> */}
                             <div className="flex justify-center border py-1.5 rounded-sm bg-red-300 cursor-pointer">
                                 <span className="text-sm text-cs-foreground-primary">
                                     Deactivate Account

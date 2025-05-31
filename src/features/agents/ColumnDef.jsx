@@ -18,26 +18,39 @@ import AssignReferralCodeDialog from "./AssignReferralCodeDialog";
 const columnHelper = createColumnHelper();
 
 export const columns = [
-    columnHelper.accessor("name", {
-        header: (column) => {
+    columnHelper.accessor("fullName", {
+        header: () => {
             return (
-                <>
-                    <div>
-                        <span>Name</span>
-                    </div>
-                    {column.column.getCanFilter() ? (
-                        <div>{/* <Filter column={column.column} /> */}</div>
-                    ) : null}
-                </>
+                <div>
+                    <span>Name</span>
+                </div>
             );
         },
         cell: (info) => <div>{info.getValue()}</div>,
     }),
-    columnHelper.accessor("phoneNumber", {
+    columnHelper.accessor("mobileNum", {
         header: () => <div className="text-right">Phone</div>,
         cell: (info) => <div className="text-right">{info.getValue()}</div>,
     }),
-    columnHelper.accessor("totalReferrals", {
+    columnHelper.accessor("totalRefer", {
+        header: (column) => (
+            <>
+                <div 
+                    {...{
+                        className: column.column.getCanSort()
+                            ? "flex justify-end items-center gap-1 cursor-pointer select-none"
+                            : "",
+                        onClick: column.column.getToggleSortingHandler(),
+                    }}
+                >
+                    <span>Total Refers</span>
+                    <ChevronsUpDown size={16} />
+                </div>
+            </>
+        ),
+        cell: (info) => <div className="text-right">{info.getValue()}</div>,
+    }),
+    columnHelper.accessor("totalReferCompleted", {
         header: (column) => (
             <>
                 <div
@@ -48,46 +61,28 @@ export const columns = [
                         onClick: column.column.getToggleSortingHandler(),
                     }}
                 >
-                    <span>Total Referrals</span>
+                    <span>Refer Completed</span>
                     <ChevronsUpDown size={16} />
                 </div>
             </>
         ),
         cell: (info) => <div className="text-right">{info.getValue()}</div>,
     }),
-    columnHelper.accessor("totalOrders", {
-        header: (column) => (
-            <>
-                <div
-                    {...{
-                        className: column.column.getCanSort()
-                            ? "flex justify-end items-center gap-1 cursor-pointer select-none"
-                            : "",
-                        onClick: column.column.getToggleSortingHandler(),
-                    }}
-                >
-                    <span>Total Orders</span>
-                    <ChevronsUpDown size={16} />
-                </div>
-            </>
-        ),
+    columnHelper.accessor("refer.referralId.wallet.totalEarning", {
+        header: () => <div className="text-right">Total Earn</div>,
         cell: (info) => <div className="text-right">{info.getValue()}</div>,
     }),
-    columnHelper.accessor("wallet.totalEarningAmount", {
-        header: () => <div className="text-right">Total Commission</div>,
+    columnHelper.accessor("refer.referralId.wallet.balance", {
+        header: () => <div className="text-right">Balance</div>,
         cell: (info) => <div className="text-right">{info.getValue()}</div>,
     }),
-    columnHelper.accessor("wallet.pendingBalance", {
-        header: () => <div className="text-right">Pending Commission</div>,
-        cell: (info) => <div className="text-right">{info.getValue()}</div>,
-    }),
-    columnHelper.accessor("wallet.pendingWithdrawalAmount", {
-        header: () => <div className="text-right">Pending Withdrawal</div>,
+    columnHelper.accessor("refer.referralId.wallet.pendingBalance", {
+        header: () => <div className="text-right">Pending Balance</div>,
         cell: (info) => <div className="text-right">{info.getValue()}</div>,
     }),
     columnHelper.accessor("actions", {
         cell: ({ row }) => {
-            const agent = row.original;
+            const referralUser = row.original;
 
             return (
                 <div className="flex justify-end">
@@ -105,14 +100,14 @@ export const columns = [
                                     e.preventDefault();
                                 }}
                             >
-                                <SummaryDrawer id={agent._id} />
+                                <SummaryDrawer id={referralUser.refer.referralId._id} />
                             </DropdownMenuItem>
                             <DropdownMenuItem
                                 onSelect={(e) => {
                                     e.preventDefault();
                                 }}
                             >
-                                <ViewDetailDrawer id={agent._id} />
+                                <ViewDetailDrawer id={referralUser.refer.referralId._id} />
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
@@ -120,12 +115,12 @@ export const columns = [
                                     e.preventDefault();
                                 }}
                             >
-                                <AssignReferralCodeDialog
-                                    agentId={agent._id}
+                                {/* <AssignReferralCodeDialog
+                                    id={referralUser.refer.referralId._id}
                                     name={agent.name}
-                                />
+                                /> */}
                             </DropdownMenuItem>
-                            {agent.accountStatus === "activate" ? (
+                            {/* {agent.accountStatus === "activate" ? (
                                 <DropdownMenuItem
                                     className="text-red-600"
                                     onSelect={(e) => {
@@ -145,7 +140,7 @@ export const columns = [
                                 >
                                     <ActivateAccountAlert agentId={agent._id} />
                                 </DropdownMenuItem>
-                            )}
+                            )} */}
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

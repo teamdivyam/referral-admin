@@ -26,19 +26,20 @@ import ActiveReferralTable from "./ActiveReferralTable";
 import PendingReferralTable from "./PendingReferralTable";
 import UsedReferralTable from "./UsedReferralTable";
 import { format } from "date-fns";
+import { data } from "react-router-dom";
 
 export default function ViewDetail({ id }) {
     const fetchAgent = async () => {
         try {
-            const response = await AdminService.agentById(id);
+            const response = await AdminService.referralUserById(id);
 
-            return response.data?.agent;
+            return response.data?.referralUser;
         } catch (error) {
             console.log("Error:", error.message);
         }
     };
 
-    const { data: agent, isLoading } = useQuery({
+    const { data: referralUser, isLoading } = useQuery({
         queryKey: ["agent-summary"],
         queryFn: fetchAgent,
     });
@@ -62,17 +63,17 @@ export default function ViewDetail({ id }) {
                             <div className="flex justify-between items-center">
                                 <div className="flex flex-col gap-2">
                                     <span className="text-2xl font-semibold text-cs-foreground-primary">
-                                        {agent.name}
+                                        {referralUser.user.fullName}
                                     </span>
                                     <span className="flex gap-4 text-sm font-medium">
                                         <span className="text-cs-foreground-secondary">
-                                            {agent.phoneNumber}
+                                            {referralUser.user.mobileNum}
                                         </span>
                                         <a
-                                            href={`mailto:${agent.email}`}
+                                            href={`mailto:${referralUser.user.email}`}
                                             className="text-blue-500 hover:underline cursor-pointer"
                                         >
-                                            {agent.email}
+                                            {referralUser.user.email}
                                         </a>{" "}
                                     </span>
                                 </div>
@@ -83,13 +84,13 @@ export default function ViewDetail({ id }) {
                                     Quick Actions
                                 </h2>
                                 <div className="flex gap-3.5 mt-2.5">
-                                    <div className="flex justify-center border px-2 py-1.5 rounded-sm bg-green-300 cursor-pointer">
+                                    {/* <div className="flex justify-center border px-2 py-1.5 rounded-sm bg-green-300 cursor-pointer">
                                         <AssignReferralCodeDialog
                                             agentId={agent._id}
                                             name={agent.name}
                                         />
-                                    </div>
-                                    {agent.accountStatus === "activate" ? (
+                                    </div> */}
+                                    {/* {agent.accountStatus === "activate" ? (
                                         <div className="flex justify-center border px-2 py-1.5 rounded-sm bg-red-300 cursor-pointer">
                                             <DeactivateAccountAlert
                                                 agentId={agent._id}
@@ -101,7 +102,7 @@ export default function ViewDetail({ id }) {
                                                 agentId={agent._id}
                                             />
                                         </div>
-                                    )}
+                                    )} */}
                                 </div>
                             </div>
 
@@ -112,7 +113,7 @@ export default function ViewDetail({ id }) {
                                             Agent Summary
                                         </h2>
                                         <div className="mt-4.5 h-full">
-                                            <AgentSummaryTable agent={agent} />
+                                            <AgentSummaryTable referralUser={referralUser} />
                                         </div>
                                     </div>
                                     <div>
@@ -121,7 +122,7 @@ export default function ViewDetail({ id }) {
                                         </h2>
                                         <div className="mt-4.5 border">
                                             <LatestWithdrawalRequestTable
-                                                agent={agent}
+                                                referralUser={referralUser}
                                             />
                                         </div>
                                     </div>
@@ -147,7 +148,7 @@ export default function ViewDetail({ id }) {
                                             Used Referral
                                         </TabsTrigger>
                                     </TabsList>
-                                    <TabsContent value="withdrawalHistory">
+                                    {/* <TabsContent value="withdrawalHistory">
                                         <div className="mt-4.5 border">
                                             <WithdrawalHistoryTable
                                                 agent={agent}
@@ -172,7 +173,7 @@ export default function ViewDetail({ id }) {
                                         <div className="mt-4.5">
                                             <UsedReferralTable agent={agent} />
                                         </div>
-                                    </TabsContent>
+                                    </TabsContent> */}
                                 </Tabs>
                             </div>
                         </div>

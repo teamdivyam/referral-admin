@@ -3,9 +3,9 @@ import API from "../config/axios";
 const AdminService = {
     dashboardAnalytics: () =>  API.get("/admin/dashboard-analytics"),
 
-    agents: (params) => API.get("/admin/agents", { params }),
+    agents: (params) => API.get("/admin/referral-users", { params }),
 
-    agentById: (agentId) => API.get(`/admin/agent/${agentId}`),
+    referralUserById: (referralUserId) => API.get(`/admin/referral-user/${referralUserId}`),
 
     assignReferralCode: (agentId, quantity) =>
         API.post(`/admin/assign-referral-code/${agentId}`, { quantity }),
