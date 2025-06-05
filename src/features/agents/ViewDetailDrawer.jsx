@@ -84,25 +84,23 @@ export default function ViewDetail({ id }) {
                                     Quick Actions
                                 </h2>
                                 <div className="flex gap-3.5 mt-2.5">
-                                    {/* <div className="flex justify-center border px-2 py-1.5 rounded-sm bg-green-300 cursor-pointer">
-                                        <AssignReferralCodeDialog
-                                            agentId={agent._id}
-                                            name={agent.name}
-                                        />
-                                    </div> */}
-                                    {/* {agent.accountStatus === "activate" ? (
+                                    {referralUser.accountStatus === "activate" ? (
                                         <div className="flex justify-center border px-2 py-1.5 rounded-sm bg-red-300 cursor-pointer">
                                             <DeactivateAccountAlert
-                                                agentId={agent._id}
+                                                referralUserId={
+                                                    referralUser._id
+                                                }
                                             />
                                         </div>
                                     ) : (
                                         <div className="flex justify-center border px-2 py-1.5 rounded-sm bg-red-300 cursor-pointer">
                                             <ActivateAccountAlert
-                                                agentId={agent._id}
+                                                referralUserId={
+                                                    referralUser._id
+                                                }
                                             />
                                         </div>
-                                    )} */}
+                                    )}
                                 </div>
                             </div>
 
@@ -113,7 +111,9 @@ export default function ViewDetail({ id }) {
                                             Agent Summary
                                         </h2>
                                         <div className="mt-4.5 h-full">
-                                            <AgentSummaryTable referralUser={referralUser} />
+                                            <AgentSummaryTable
+                                                referralUser={referralUser}
+                                            />
                                         </div>
                                     </div>
                                     <div>
@@ -132,14 +132,11 @@ export default function ViewDetail({ id }) {
                             <div className="my-6.5">
                                 <Tabs
                                     defaultValue="withdrawalHistory"
-                                    className="w-[70vw]"
+                                    className="w-[60vw]"
                                 >
-                                    <TabsList className="grid w-full grid-cols-4 bg-cs-foreground-secondary">
+                                    <TabsList className="grid w-full grid-cols-3 bg-cs-foreground-secondary">
                                         <TabsTrigger value="withdrawalHistory">
                                             Withdrawal History
-                                        </TabsTrigger>
-                                        <TabsTrigger value="activeReferral">
-                                            Active Referral
                                         </TabsTrigger>
                                         <TabsTrigger value="pendingReferral">
                                             Pending Referral
@@ -148,6 +145,13 @@ export default function ViewDetail({ id }) {
                                             Used Referral
                                         </TabsTrigger>
                                     </TabsList>
+                                    <TabsContent value="withdrawalHistory">
+                                        <div className="mt-4.5 border">
+                                            <WithdrawalHistoryTable
+                                                referralUser={referralUser}
+                                            />
+                                        </div>
+                                    </TabsContent>
                                     {/* <TabsContent value="withdrawalHistory">
                                         <div className="mt-4.5 border">
                                             <WithdrawalHistoryTable
@@ -162,18 +166,18 @@ export default function ViewDetail({ id }) {
                                             />
                                         </div>
                                     </TabsContent>
+                                    <TabsContent value="usedReferral">
+                                    <div className="mt-4.5">
+                                    <UsedReferralTable agent={agent} />
+                                    </div>
+                                    </TabsContent> */}
                                     <TabsContent value="pendingReferral">
                                         <div className="mt-4.5">
                                             <PendingReferralTable
-                                                agent={agent}
+                                                referralUser={referralUser}
                                             />
                                         </div>
                                     </TabsContent>
-                                    <TabsContent value="usedReferral">
-                                        <div className="mt-4.5">
-                                            <UsedReferralTable agent={agent} />
-                                        </div>
-                                    </TabsContent> */}
                                 </Tabs>
                             </div>
                         </div>

@@ -1,9 +1,7 @@
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
@@ -11,8 +9,8 @@ import {
 
 import { format } from "date-fns";
 
-export default function WithdrawalHistoryTable({ agent }) {
-    const withdrawalHistory = agent.wallet.withdrawalHistory;
+export default function WithdrawalHistoryTable({ referralUser }) {
+    const withdrawalHistory = referralUser.wallet.withdrawals;
 
     return (
         <Table>

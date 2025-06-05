@@ -15,6 +15,8 @@ import { IndianRupee, X } from "lucide-react";
 import AssignReferralCodeDialog from "./AssignReferralCodeDialog";
 import ViewDetail from "./ViewDetailDrawer";
 import AgentSummaryTable from "./AgentSummaryTable";
+import DeactivateAccountAlert from "./DeactivateAccountDialog";
+import ActivateAccountAlert from "./ActivateAccountAlert";
 
 export default function SummaryDrawer({ id }) {
     const fetchAgent = async () => {
@@ -75,26 +77,23 @@ export default function SummaryDrawer({ id }) {
                         </DrawerHeader>
 
                         <div className="mt-4.5 mx-4.5">
-                            <AgentSummaryTable referralUser={referralUser}/>
+                            <AgentSummaryTable referralUser={referralUser} />
                         </div>
 
                         <div className="grid grid-cols-2 gap-2.5 my-6.5 mx-4.5">
-                            {/* <div className="flex justify-center border py-1.5 rounded-sm bg-green-300 cursor-pointer">
-                                <AssignReferralCodeDialog
-                                    agentId={agent._id}
-                                    name={agent.name}
-                                />
-                            </div> */}
-                            {/* <div className="flex justify-center border py-1.5 rounded-sm bg-yellow-200 cursor-pointer">
-                                <span className="text-sm text-cs-foreground-primary">
-                                    <ViewDetail id={agent._id}/>
-                                </span>
-                            </div> */}
-                            <div className="flex justify-center border py-1.5 rounded-sm bg-red-300 cursor-pointer">
-                                <span className="text-sm text-cs-foreground-primary">
-                                    Deactivate Account
-                                </span>
-                            </div>
+                            {referralUser.accountStatus === "activate" ? (
+                                <div className="flex justify-center border px-2 py-1.5 rounded-sm bg-red-300 cursor-pointer">
+                                    <DeactivateAccountAlert
+                                        referralUserId={referralUser._id}
+                                    />
+                                </div>
+                            ) : (
+                                <div className="flex justify-center border px-2 py-1.5 rounded-sm bg-red-300 cursor-pointer">
+                                    <ActivateAccountAlert
+                                        referralUserId={referralUser._id}
+                                    />
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}

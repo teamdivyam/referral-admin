@@ -38,26 +38,13 @@ export default function SummaryAnalytics() {
                 </div>
                 <div className="flex flex-col gap-0.5">
                     <span className="text-sm text-cs-foreground-secondary">
-                        Total Agents
+                        Referral Users
                     </span>
                     <span className="text-2xl font-semibold text-sidebar-primary">
                         {isLoading ? <LoadingCircle /> : data.totalReferralUser}
                     </span>
                 </div>
             </div>
-            {/* <div className="flex px-2.5 py-4.5 gap-5.5 bg-cs-background-secondary rounded-lg shadow-sm">
-                <div className="flex justify-center items-center">
-                    <Activity className="size-8 text-cs-icon-primary" />
-                </div>
-                <div className="flex flex-col gap-0.5">
-                    <span className="text-sm text-cs-foreground-secondary">
-                        Active Codes
-                    </span>
-                    <span className="text-2xl font-semibold text-sidebar-primary">
-                        {isLoading ? <LoadingCircle /> : data.activeReferralCodes}
-                    </span>
-                </div>
-            </div> */}
             <div className="flex px-2.5 py-4.5 gap-5.5 bg-cs-background-secondary rounded-lg shadow-sm">
                 <div className="flex justify-center items-center">
                     <IndianRupee className="size-8 text-cs-icon-primary" />
@@ -110,7 +97,7 @@ export default function SummaryAnalytics() {
                     </span>
                 </div>
             </div>
-            <div className="flex px-2.5 py-4.5 gap-5.5 bg-cs-background-secondary rounded-lg shadow-sm">
+            {/* <div className="flex px-2.5 py-4.5 gap-5.5 bg-cs-background-secondary rounded-lg shadow-sm">
                 <div className="flex justify-center items-center">
                     <Calendar className="size-8 text-cs-icon-primary" />
                 </div>
@@ -122,7 +109,7 @@ export default function SummaryAnalytics() {
                         4669
                     </span>
                 </div>
-            </div>
+            </div> */}
         </>
     );
 }

@@ -12,13 +12,13 @@ import {
 import { toast } from "sonner";
 import AdminService from "../../services/admin.service";
 
-export default function ActivateAccountAlert({ agentId }) {
+export default function ActivateAccountAlert({ referralUserId }) {
 
     const handleClick = async () => {
 
         console.log("Click on deactivate account.")
         try {
-            const response = await AdminService.activateAccount(agentId);
+            const response = await AdminService.activateAccount(referralUserId);
 
             if (response.data.success) {
                 return toast(response.data?.message);

@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import AdminService from "../../services/admin.service";
 
-export default function DeactivateAccountAlert({ agentId }) {
+export default function DeactivateAccountAlert({ referralUserId }) {
     const handleClick = async () => {
         try {
-            const response = await AdminService.deactivateAccount(agentId);
+            const response = await AdminService.deactivateAccount(referralUserId);
 
             if (response.data.success) {
                 return toast(response.data?.message);

@@ -10,11 +10,18 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import AdminService from "../../services/admin.service";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 export default function ApprovedWithdrawalRequestAlert({ withdrawalId }) {
+    const [remarks, setRemarks] = useState("");
+
     const handleClick = async () => {
         try {
-            const response = await AdminService.approveWithdrawalRequest(withdrawalId);
+            const response = await AdminService.approveWithdrawalRequest(
+                withdrawalId,
+                remarks
+            );
 
             if (response.data.success) {
                 return toast(response.data?.message);
@@ -43,15 +50,17 @@ export default function ApprovedWithdrawalRequestAlert({ withdrawalId }) {
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>
-                        Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete your account and remove your data from our
-                        servers.
-                    </AlertDialogDescription>
+                    <AlertDialogTitle>Approved Withdrawal</AlertDialogTitle>
+                    {/* <AlertDialogDescription>
+                        
+                    </AlertDialogDescription> */}
                 </AlertDialogHeader>
+                <Input
+                    placeholder="remarks"
+                    value={remarks}
+                    onChange={(e) => setRemarks(e.target.value)}
+                    onKeyDown={(e) => e.stopPropagation()}
+                />
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction onClick={handleClick}>

@@ -9,17 +9,23 @@ import {
 
 import { format } from "date-fns";
 
-export default function PendingReferralTable({ agent }) {
-    const pendingReferral = agent.referral.pending;
+export default function PendingReferralTable({ referralUser }) {
+    const pendingReferral = referralUser.referralEvents.filter(
+        (referral) => referral.status == "pending"
+    );
 
     return (
         <Table>
             <TableHeader>
                 <TableRow className="bg-cs-background-secondary">
-                    <TableHead>Referral Code</TableHead>
+                    {/* <TableHead>Referral Code</TableHead>
                     <TableHead>Create Date</TableHead>
                     <TableHead>Pending Date</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
+                    <TableHead className="text-right">Amount</TableHead> */}
+                    <TableHead>Pending Date</TableHead>
+                    <TableHead>User ID</TableHead>
+                    <TableHead>Order ID</TableHead>
+                    <TableHead className="text-right">Amount</TableHead>                    
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -36,16 +42,16 @@ export default function PendingReferralTable({ agent }) {
                             className="bg-cs-background-secondary"
                         >
                             <TableCell className="font-medium">
-                                {referral.referralCode}
-                            </TableCell>
-                            <TableCell>
                                 {format(referral.createdAt, "dd/MM/yyyy")}
                             </TableCell>
                             <TableCell>
-                                {format(referral.pendingAt, "dd/MM/yyyy")}
+                                #{referral.referee.slice(referral.referee.length - 5).toUpperCase()}
+                            </TableCell>
+                            <TableCell>
+                                #{referral.orderId.slice(referral.orderId.length - 5).toUpperCase()}
                             </TableCell>
                             <TableCell className="text-right">
-                                {referral.rewardAmount}
+                                {referral.amount}
                             </TableCell>
                         </TableRow>
                     ))

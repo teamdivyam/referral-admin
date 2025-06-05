@@ -1,26 +1,33 @@
 import API from "../config/axios";
 
 const AdminService = {
-    dashboardAnalytics: () =>  API.get("/admin/dashboard-analytics"),
+    dashboardAnalytics: () => API.get("/admin/dashboard-analytics"),
 
     agents: (params) => API.get("/admin/referral-users", { params }),
 
-    referralUserById: (referralUserId) => API.get(`/admin/referral-user/${referralUserId}`),
+    referralUserById: (referralUserId) =>
+        API.get(`/admin/referral-user/${referralUserId}`),
 
     assignReferralCode: (agentId, quantity) =>
         API.post(`/admin/assign-referral-code/${agentId}`, { quantity }),
 
-    activateAccount: (agentId) =>
-        API.put(`/admin/change-account-status/activate/${agentId}`),
+    activateAccount: (referralUserId) =>
+        API.put(`/admin/change-account-status/activate/${referralUserId}`),
 
-    deactivateAccount: (agentId) => 
-        API.put(`/admin/change-account-status/deactivate/${agentId}`),
+    deactivateAccount: (referralUserId) =>
+        API.put(`/admin/change-account-status/deactivate/${referralUserId}`),
 
-    approveWithdrawalRequest: (withdrawalId) => 
-        API.put(`/admin/process-withdrawal-request/approved/${withdrawalId}`),
+    approveWithdrawalRequest: (withdrawalId, remarks) =>
+        API.patch(
+            `/admin/process-withdrawal-request/approved/${withdrawalId}`,
+            { remarks }
+        ),
 
-    rejectedWithdrawalRequest: (withdrawalId) => 
-        API.put(`/admin/process-withdrawal-request/rejected/${withdrawalId}`),
+    rejectedWithdrawalRequest: (withdrawalId, remarks) =>
+        API.patch(
+            `/admin/process-withdrawal-request/rejected/${withdrawalId}`,
+            { remarks }
+        ),
 };
 
 export default AdminService;
