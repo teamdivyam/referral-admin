@@ -3,20 +3,32 @@ import { AppSidebar } from "./app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Bell, Info } from "lucide-react";
 import ModeToggle from "./mode-toggle";
+import { useContext, useEffect } from "react";
+import { PageContext } from "../contexts/PageContext";
 
 const pageHeaders = {
-    dashboard: "Main Dashboard",
-    agents: "Agents Management",
-    settings: "Settings",
+    dashboard: { title: "Main Dashboard", index: 0 },
+    users: { title: "Users Management", index: 1 },
+    withdrawals: {
+        title: "Withdrawals",
+        index: 2,
+    },
+    settings: { title: "Settings", index: 3 },
 };
 
 export default function Layout() {
     const location = useLocation();
+    const loc = location.pathname.split("/")[1];
 
-    const loc = location.pathname
-        .split("/")[1]
-        .replace(/(?:^|-)([a-z])/g, (_, letter) => ` ${letter.toUpperCase()}`)
-        .trim();
+    const { setCurrentPage } = useContext(PageContext);
+
+    useEffect(() => {
+        if (!pageHeaders[loc]) {
+            setCurrentPage(0);
+        } else {
+            setCurrentPage(pageHeaders[loc]?.index);
+        }
+    }, []);
 
     return (
         <SidebarProvider>
@@ -32,15 +44,21 @@ export default function Layout() {
                                 Pages / {loc}
                             </div>
                             <div className="text-3xl font-semibold text-cs-foreground-primary">
-                                {pageHeaders[loc.toLowerCase()]}
+                                {pageHeaders[loc]?.title}
                             </div>
                         </div>
                         <div className="hidden bg-cs-background-secondary rounded-full shadow-sm px-6 py-1.5 items-center gap-3.5 md:flex">
-                            <Link to="/" className="text-cs-foreground-secondary">
+                            <Link
+                                to="/"
+                                className="text-cs-foreground-secondary"
+                            >
                                 <Bell className="size-4" />
                             </Link>
 
-                            <Link to="/" className="text-cs-foreground-secondary">
+                            <Link
+                                to="/"
+                                className="text-cs-foreground-secondary"
+                            >
                                 <Info className="size-4" />
                             </Link>
 

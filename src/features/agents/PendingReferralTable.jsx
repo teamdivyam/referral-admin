@@ -18,10 +18,6 @@ export default function PendingReferralTable({ referralUser }) {
         <Table>
             <TableHeader>
                 <TableRow className="bg-cs-background-secondary">
-                    {/* <TableHead>Referral Code</TableHead>
-                    <TableHead>Create Date</TableHead>
-                    <TableHead>Pending Date</TableHead>
-                    <TableHead className="text-right">Amount</TableHead> */}
                     <TableHead>Pending Date</TableHead>
                     <TableHead>User ID</TableHead>
                     <TableHead>Order ID</TableHead>

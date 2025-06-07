@@ -22,6 +22,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { PageContext } from "../contexts/PageContext";
 
 const fetchAgentsData = async (pageIndex, pageSize, filterSearchValue) => {
     try {
@@ -36,7 +37,7 @@ const fetchAgentsData = async (pageIndex, pageSize, filterSearchValue) => {
     }
 };
 
-export default function Agents() {
+export default function Users() {
     const [columnFilters, setColumnFilters] = useState([]);
     const [searchInput, setSearchInput] = useState("");
     const debouncedSearchTerm = useDebounce(searchInput, 500);

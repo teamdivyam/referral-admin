@@ -17,10 +17,10 @@ const AdminService = {
     deactivateAccount: (referralUserId) =>
         API.put(`/admin/change-account-status/deactivate/${referralUserId}`),
 
-    approveWithdrawalRequest: (withdrawalId, remarks) =>
+    approveWithdrawalRequest: (withdrawalId, transactionId, remarks) =>
         API.patch(
             `/admin/process-withdrawal-request/approved/${withdrawalId}`,
-            { remarks }
+            { transactionId, remarks }
         ),
 
     rejectedWithdrawalRequest: (withdrawalId, remarks) =>
@@ -28,6 +28,8 @@ const AdminService = {
             `/admin/process-withdrawal-request/rejected/${withdrawalId}`,
             { remarks }
         ),
+
+    withdrawals: (withdrawalType, page) => API.get("/admin/withdrawals", { params: { withdrawalType, page } }),
 };
 
 export default AdminService;

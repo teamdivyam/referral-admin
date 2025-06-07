@@ -10,7 +10,7 @@ export default function Dashboard() {
                 <SummaryAnalytics />
             </div>
 
-            <div className="grid grid-cols-5 mt-10">
+            {/* <div className="grid grid-cols-5 mt-10">
                 <div className="col-span-5 lg:col-span-3 bg-cs-background-secondary px-6 py-6.5 rounded-xl shadow-sm">
                     <div className="flex justify-between">
                         <SelectTimeRange />
@@ -29,7 +29,7 @@ export default function Dashboard() {
                         <ReferralOverTimeChart />
                     </div>
                 </div>
-            </div>
+            </div> */}
         </>
     );
 }

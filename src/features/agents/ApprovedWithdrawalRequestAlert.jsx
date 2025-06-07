@@ -14,12 +14,14 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
 export default function ApprovedWithdrawalRequestAlert({ withdrawalId }) {
+    const [transactionId, setTransactionId] = useState("");
     const [remarks, setRemarks] = useState("");
 
     const handleClick = async () => {
         try {
             const response = await AdminService.approveWithdrawalRequest(
                 withdrawalId,
+                transactionId,
                 remarks
             );
 
@@ -51,12 +53,15 @@ export default function ApprovedWithdrawalRequestAlert({ withdrawalId }) {
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Approved Withdrawal</AlertDialogTitle>
-                    {/* <AlertDialogDescription>
-                        
-                    </AlertDialogDescription> */}
                 </AlertDialogHeader>
                 <Input
-                    placeholder="remarks"
+                    placeholder="Transaction ID"
+                    value={transactionId}
+                    onChange={(e) => setTransactionId(e.target.value)}
+                    onKeyDown={(e) => e.stopPropagation()}
+                />
+                <Input
+                    placeholder="Remarks"
                     value={remarks}
                     onChange={(e) => setRemarks(e.target.value)}
                     onKeyDown={(e) => e.stopPropagation()}

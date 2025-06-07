@@ -1,19 +1,4 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-    Sheet,
-    SheetClose,
-    SheetContent,
-    SheetDescription,
-    SheetFooter,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet";
-import AssignReferralCodeDialog from "./AssignReferralCodeDialog";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useQuery } from "@tanstack/react-query";
 import AdminService from "../../services/admin.service";
 import DeactivateAccountAlert from "./DeactivateAccountDialog";
@@ -22,11 +7,8 @@ import AgentSummaryTable from "./AgentSummaryTable";
 import LatestWithdrawalRequestTable from "./LatestWithdrawalRequestTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import WithdrawalHistoryTable from "./WithdrawalHistoryTable";
-import ActiveReferralTable from "./ActiveReferralTable";
 import PendingReferralTable from "./PendingReferralTable";
-import UsedReferralTable from "./UsedReferralTable";
-import { format } from "date-fns";
-import { data } from "react-router-dom";
+import CompletedReferralTable from "./CompletedReferralTable";
 
 export default function ViewDetail({ id }) {
     const fetchAgent = async () => {
@@ -84,7 +66,8 @@ export default function ViewDetail({ id }) {
                                     Quick Actions
                                 </h2>
                                 <div className="flex gap-3.5 mt-2.5">
-                                    {referralUser.accountStatus === "activate" ? (
+                                    {referralUser.accountStatus ===
+                                    "activate" ? (
                                         <div className="flex justify-center border px-2 py-1.5 rounded-sm bg-red-300 cursor-pointer">
                                             <DeactivateAccountAlert
                                                 referralUserId={
@@ -135,45 +118,33 @@ export default function ViewDetail({ id }) {
                                     className="w-[60vw]"
                                 >
                                     <TabsList className="grid w-full grid-cols-3 bg-cs-foreground-secondary">
-                                        <TabsTrigger value="withdrawalHistory">
+                                        <TabsTrigger value="withdrawals">
                                             Withdrawal History
                                         </TabsTrigger>
                                         <TabsTrigger value="pendingReferral">
                                             Pending Referral
                                         </TabsTrigger>
                                         <TabsTrigger value="usedReferral">
-                                            Used Referral
+                                            Complete Referral
                                         </TabsTrigger>
                                     </TabsList>
-                                    <TabsContent value="withdrawalHistory">
+                                    <TabsContent value="withdrawals">
                                         <div className="mt-4.5 border">
                                             <WithdrawalHistoryTable
                                                 referralUser={referralUser}
                                             />
                                         </div>
                                     </TabsContent>
-                                    {/* <TabsContent value="withdrawalHistory">
-                                        <div className="mt-4.5 border">
-                                            <WithdrawalHistoryTable
-                                                agent={agent}
-                                            />
-                                        </div>
-                                    </TabsContent>
-                                    <TabsContent value="activeReferral">
+                                    <TabsContent value="pendingReferral">
                                         <div className="mt-4.5">
-                                            <ActiveReferralTable
-                                                agent={agent}
+                                            <PendingReferralTable
+                                                referralUser={referralUser}
                                             />
                                         </div>
                                     </TabsContent>
                                     <TabsContent value="usedReferral">
-                                    <div className="mt-4.5">
-                                    <UsedReferralTable agent={agent} />
-                                    </div>
-                                    </TabsContent> */}
-                                    <TabsContent value="pendingReferral">
                                         <div className="mt-4.5">
-                                            <PendingReferralTable
+                                            <CompletedReferralTable
                                                 referralUser={referralUser}
                                             />
                                         </div>

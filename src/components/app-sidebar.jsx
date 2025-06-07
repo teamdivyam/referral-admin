@@ -9,8 +9,9 @@ import {
     SidebarGroupContent,
 } from "@/components/ui/sidebar";
 import { Home, Settings, Users } from "lucide-react";
-import { useState } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { PageContext } from "../contexts/PageContext";
 
 const items = [
     {
@@ -19,8 +20,13 @@ const items = [
         icon: Home,
     },
     {
-        title: "Agents Management",
-        url: "/agents",
+        title: "Users Management",
+        url: "/users",
+        icon: Users,
+    },
+    {
+        title: "Withdrawals",
+        url: "/withdrawals",
         icon: Users,
     },
     {
@@ -31,7 +37,7 @@ const items = [
 ];
 
 export function AppSidebar() {
-    const [activePageIndex, setActivePageIndex] = useState(0);
+    const { currentPage, setCurrentPage } = useContext(PageContext);
 
     return (
         <Sidebar>
@@ -49,13 +55,13 @@ export function AppSidebar() {
                                 <SidebarMenuItem asChild>
                                     <SidebarMenuButton
                                         asChild
-                                        isActive={activePageIndex === index}
+                                        isActive={currentPage === index}
                                         size="base"
                                     >
                                         <Link
                                             to={item.url}
                                             onClick={() => {
-                                                setActivePageIndex(index);  
+                                                setCurrentPage(index);
                                             }}
                                             className="text-cs-foreground-secondary data-[active=true]:text-sidebar-primary data-[active=false]:hover:text-sidebar-primary"
                                         >
@@ -72,4 +78,3 @@ export function AppSidebar() {
         </Sidebar>
     );
 }
-

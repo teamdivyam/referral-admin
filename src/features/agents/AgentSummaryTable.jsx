@@ -23,7 +23,7 @@ export default function AgentSummaryTable({ referralUser }) {
                 <span className="flex items-center gap-1">
                     <IndianRupee className="size-3 text-cs-icon-primary" />
                     <span className="text-cs-foreground-secondary">
-                        0
+                        {referralUser.wallet.pendingWithdrawal}
                     </span>
                 </span>
             </div>

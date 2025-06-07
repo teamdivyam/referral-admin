@@ -1,11 +1,17 @@
 import { Outlet, Navigate } from "react-router-dom";
 import isTokenExpired from "../lib/isTokenExpired";
+import { PageProvider } from "../contexts/PageContext";
 
 export default function ProtectedRoute() {
     const token = localStorage.getItem("token");
 
     const isAuthenticated = token && !isTokenExpired(token);
 
-    return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
-
+    return isAuthenticated ? (
+        <PageProvider>
+            <Outlet />
+        </PageProvider>
+    ) : (
+        <Navigate to="/login" />
+    );
 }

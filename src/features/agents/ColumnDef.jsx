@@ -11,9 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import SummaryDrawer from "./Summary";
 import ViewDetailDrawer from "./ViewDetailDrawer";
-import DeactivateAccountAlert from "./DeactivateAccountDialog";
-import ActivateAccountAlert from "./ActivateAccountAlert";
-import AssignReferralCodeDialog from "./AssignReferralCodeDialog";
 
 const columnHelper = createColumnHelper();
 
@@ -35,7 +32,7 @@ export const columns = [
     columnHelper.accessor("totalRefer", {
         header: (column) => (
             <>
-                <div 
+                <div
                     {...{
                         className: column.column.getCanSort()
                             ? "flex justify-end items-center gap-1 cursor-pointer select-none"
@@ -81,6 +78,7 @@ export const columns = [
         cell: (info) => <div className="text-right">{info.getValue()}</div>,
     }),
     columnHelper.accessor("actions", {
+        header: () => <div className="text-right">Actions</div>,
         cell: ({ row }) => {
             const referralUser = row.original;
 
@@ -88,7 +86,10 @@ export const columns = [
                 <div className="flex justify-end">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
+                            <Button
+                                variant="ghost"
+                                className="h-8 w-8 p-0 cursor-pointer"
+                            >
                                 <span className="sr-only">Open menu</span>
                                 <MoreHorizontal className="h-4 w-4" />
                             </Button>
@@ -100,14 +101,18 @@ export const columns = [
                                     e.preventDefault();
                                 }}
                             >
-                                <SummaryDrawer id={referralUser.refer.referralId._id} />
+                                <SummaryDrawer
+                                    id={referralUser.refer.referralId._id}
+                                />
                             </DropdownMenuItem>
                             <DropdownMenuItem
                                 onSelect={(e) => {
                                     e.preventDefault();
                                 }}
                             >
-                                <ViewDetailDrawer id={referralUser.refer.referralId._id} />
+                                <ViewDetailDrawer
+                                    id={referralUser.refer.referralId._id}
+                                />
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
