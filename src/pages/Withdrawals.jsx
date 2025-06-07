@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import LatestWithdrawals from "../features/withdrawals/latestWithdrawals";
-import ApprovedWithdrawals from "../features/withdrawals/approvedWithdrawals";
-import RejectedWithdrawals from "../features/withdrawals/rejectedWithdrawals";
+import LatestWithdrawals from "../features/withdrawals/LatestWithdrawals";
+import ApprovedWithdrawals from "../features/withdrawals/ApprovedWithdrawals";
+import RejectedWithdrawals from "../features/withdrawals/RejectedWithdrawals";
 
 export default function Withdrawals() {
     return (
