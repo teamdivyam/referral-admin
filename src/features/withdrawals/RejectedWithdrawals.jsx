@@ -19,6 +19,8 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Status from "../common/Status";
+import RejectedDetails from "./RejectedDetails";
 
 const fetchWithdrawals = async (page) => {
     try {
@@ -96,7 +98,9 @@ export default function RejectedWithdrawals() {
                             <TableCell className="font-medium">
                                 {format(request.createdAt, "dd/MM/yyyy")}
                             </TableCell>
-                            <TableCell>{request.status}</TableCell>
+                            <TableCell>
+                                <Status statusType={request.status} />
+                            </TableCell>
                             <TableCell>{request.bank.name}</TableCell>
                             <TableCell>{request.amount}</TableCell>
                             <TableCell className="text-right">
@@ -117,11 +121,15 @@ export default function RejectedWithdrawals() {
                                             <DropdownMenuLabel>
                                                 Actions
                                             </DropdownMenuLabel>
-                                            <DropdownMenuItem className="cursor-pointer">
-                                                Remarks
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem className="cursor-pointer">
-                                                Approved
+                                            <DropdownMenuItem
+                                                className="cursor-pointer"
+                                                onSelect={(e) => {
+                                                    e.preventDefault();
+                                                }}
+                                            >
+                                                <RejectedDetails
+                                                    rejectedDetails={request}
+                                                />
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>

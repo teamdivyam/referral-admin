@@ -21,6 +21,7 @@ import {
 import ApprovedWithdrawalRequestAlert from "../agents/ApprovedWithdrawalRequestAlert";
 import RejectWithdrawalRequestAlert from "../agents/RejectWithdrawalRequestAlert";
 import { MoreHorizontal } from "lucide-react";
+import Status from "../common/Status";
 
 const fetchWithdrawals = async (page) => {
     try {
@@ -99,7 +100,7 @@ export default function LatestWithdrawals() {
                             <TableCell className="font-medium">
                                 {format(request.createdAt, "dd/MM/yyyy")}
                             </TableCell>
-                            <TableCell>{request.status}</TableCell>
+                            <TableCell><Status statusType={request.status} /></TableCell>
                             <TableCell>{request.bank.name}</TableCell>
                             <TableCell>{request.amount}</TableCell>
                             <TableCell className="text-right">

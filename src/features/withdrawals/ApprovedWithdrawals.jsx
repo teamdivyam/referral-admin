@@ -19,6 +19,8 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import ApprovedDetails from "./ApprovedDetails";
+import Status from "../common/Status";
 const fetchWithdrawals = async (page) => {
     try {
         const response = await AdminService.withdrawals("approved", page);
@@ -73,7 +75,7 @@ export default function ApprovedWithdrawals() {
                 <TableHeader>
                     <TableRow>
                         <TableHead className="py-3.5 font-base sticky top-0 z-1 bg-cs-background-secondary">
-                            Request Date
+                            Approved Date
                         </TableHead>
                         <TableHead className="py-3.5 font-base sticky top-0 z-1 bg-cs-background-secondary">
                             Status
@@ -95,7 +97,9 @@ export default function ApprovedWithdrawals() {
                             <TableCell className="font-medium">
                                 {format(request.createdAt, "dd/MM/yyyy")}
                             </TableCell>
-                            <TableCell>{request.status}</TableCell>
+                            <TableCell>
+                                <Status statusType={request.status} />
+                            </TableCell>
                             <TableCell>{request.bank.name}</TableCell>
                             <TableCell>{request.amount}</TableCell>
                             <TableCell className="text-right">
@@ -119,8 +123,15 @@ export default function ApprovedWithdrawals() {
                                             <DropdownMenuItem className="cursor-pointer">
                                                 Invoice
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem className="cursor-pointer">
-                                                Details
+                                            <DropdownMenuItem
+                                                className="cursor-pointer"
+                                                onSelect={(e) => {
+                                                    e.preventDefault();
+                                                }}
+                                            >
+                                                <ApprovedDetails
+                                                    approvedDetails={request}
+                                                />
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
