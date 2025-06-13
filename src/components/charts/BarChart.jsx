@@ -8,18 +8,18 @@ import {
 } from "@/components/ui/chart";
 
 export default function Component({
-    chartDataLast7Days,
+    chartData,
     chartConfig
 }) {
     return (
-        <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-            <BarChart accessibilityLayer data={chartDataLast7Days}>
+        <ChartContainer config={chartConfig} className="h-[200px] w-full">
+            <BarChart accessibilityLayer data={chartData}>
                 <XAxis
                     dataKey="day"
                     tickLine={false}
                     tickMargin={10}
                     axisLine={false}
-                    tickFormatter={(value) => value.slice(0, 3)}
+                    // tickFormatter={(value) => value.slice(0, 3)}
                 />
                 <ChartTooltip content={<ChartTooltipContent />} />
                 <ChartLegend content={<ChartLegendContent />} />

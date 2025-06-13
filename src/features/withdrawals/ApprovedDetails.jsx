@@ -8,24 +8,28 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { IndianRupee } from "lucide-react";
+import { IndianRupee, ReceiptText } from "lucide-react";
 import { format } from "date-fns";
 
 export default function ApprovedDetails({ approvedDetails }) {
+
     return (
         <Dialog>
             <form>
                 <DialogTrigger asChild>
                     <div>Details</div>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px] bg-cs-background-primary">
+                <DialogContent className="sm:max-w-[425px] bg-cs-background-secondary">
                     <DialogHeader>
-                        <DialogTitle className="text-green-500">Payment Details</DialogTitle>
+                        <DialogTitle className="flex items-center gap-2">
+                            <ReceiptText className="text-cs-icon-primary"/>
+                            <span className="text-cs-foreground-primary">Payment Details</span>
+                        </DialogTitle>
                     </DialogHeader>
                     <div className="flex my-3.5 flex-col gap-2.5">
                         <div className="flex justify-between">
                             <span className="font-medium text-sm text-cs-foreground-primary">Transaction ID</span>
-                            <span className="text-sm text-cs-foreground-secondary">{approvedDetails.transactionRef}</span>
+                            <span className="text-sm text-cs-foreground-secondary">{approvedDetails.transactionId}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="font-medium text-sm text-cs-foreground-primary">Amount</span>
@@ -56,7 +60,7 @@ export default function ApprovedDetails({ approvedDetails }) {
                     </div>
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button className="bg-cs-foreground-primary text-white dark:text-cs-background-primary">Close</Button>
+                            <Button className="bg-cs-icon-primary text-white dark:text-cs-background-primary">Close</Button>
                         </DialogClose>
                     </DialogFooter>
                 </DialogContent>

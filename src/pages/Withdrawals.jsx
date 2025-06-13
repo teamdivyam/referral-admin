@@ -6,10 +6,10 @@ import RejectedWithdrawals from "../features/withdrawals/RejectedWithdrawals";
 export default function Withdrawals() {
     return (
         <>
-            <Tabs defaultValue="latest" className="">
+            <Tabs defaultValue="pending" className="">
                 <TabsList className="grid w-full grid-cols-3 bg-cs-foreground-secondary">
-                    <TabsTrigger className="cursor-pointer" value="latest">
-                        Latest
+                    <TabsTrigger className="cursor-pointer" value="pending">
+                        Pending
                     </TabsTrigger>
                     <TabsTrigger className="cursor-pointer" value="approved">
                         Approved
@@ -18,7 +18,7 @@ export default function Withdrawals() {
                         Rejected
                     </TabsTrigger>
                 </TabsList>
-                <TabsContent value="latest">
+                <TabsContent value="pending">
                     <div className="mt-4.5">
                         <LatestWithdrawals />
                     </div>

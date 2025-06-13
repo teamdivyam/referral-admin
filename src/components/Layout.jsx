@@ -13,7 +13,8 @@ const pageHeaders = {
         title: "Withdrawals",
         index: 2,
     },
-    settings: { title: "Settings", index: 3 },
+    help: { title: "Helps", index: 3 },
+    settings: { title: "Settings", index: 4 },
 };
 
 export default function Layout() {
@@ -29,7 +30,7 @@ export default function Layout() {
             setCurrentPage(pageHeaders[loc]?.index);
         }
     }, []);
-
+    
     return (
         <SidebarProvider>
             <AppSidebar />

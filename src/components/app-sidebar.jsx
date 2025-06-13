@@ -7,32 +7,48 @@ import {
     SidebarMenuItem,
     SidebarGroup,
     SidebarGroupContent,
+    SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 import { Home, Settings, Users } from "lucide-react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { PageContext } from "../contexts/PageContext";
 
-const items = [
+const sidebarNavigationLinks = [
     {
-        title: "Dashboard",
-        url: "/dashboard",
-        icon: Home,
+        groupLabel: "MAIN MENU",
+        groupContent: [
+            {
+                index: 0,
+                menuTitle: "Dashboard",
+                menuURL: "/dashboard",
+                menuIcon: Home,
+            },
+            {
+                index: 1,
+                menuTitle: "Users Managment",
+                menuURL: "/users",
+                menuIcon: Users,
+            },
+            {
+                index: 2,
+                menuTitle: "Withdrawals",
+                menuURL: "/withdrawals",
+                menuIcon: Users,
+            },
+        ],
     },
     {
-        title: "Users Management",
-        url: "/users",
-        icon: Users,
-    },
-    {
-        title: "Withdrawals",
-        url: "/withdrawals",
-        icon: Users,
-    },
-    {
-        title: "Settings",
-        url: "/settings",
-        icon: Settings,
+        groupLabel: "ACCOUNT",
+        groupContent: [
+            { index: 3, menuTitle: "Help", menuURL: "/help", menuIcon: Home },
+            {
+                index: 4,
+                menuTitle: "Settings",
+                menuURL: "/settings",
+                menuIcon: Settings,
+            },
+        ],
     },
 ];
 
@@ -40,40 +56,76 @@ export function AppSidebar() {
     const { currentPage, setCurrentPage } = useContext(PageContext);
 
     return (
-        <Sidebar>
+        <Sidebar className="border-r">
             <SidebarHeader>
-                <h1 className="py-5 text-center text-xl text-cs-foreground-primary md:text-2xl lg:text-3xl">
-                    <span className="font-bold">Divyam</span>&nbsp;
-                    <span className="">Admin</span>
-                </h1>
+                <div className="flex mt-4 gap-2 items-center">
+                    <img
+                        src="/img/logo.png"
+                        alt="logo"
+                        className="w-16 invert rotateImg"
+                    />
+                    <div className="flex flex-col">
+                        <span className="text-cs-foreground-primary font-semibold text-xl">
+                            Divyam
+                        </span>
+                        <span className="text-cs-foreground-secondary text-sm">
+                            Referral Dashboard
+                        </span>
+                    </div>
+                </div>
             </SidebarHeader>
-            <SidebarContent className="mt-6">
-                <SidebarGroup>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {items.map((item, index) => (
-                                <SidebarMenuItem asChild>
-                                    <SidebarMenuButton
-                                        asChild
-                                        isActive={currentPage === index}
-                                        size="base"
-                                    >
-                                        <Link
-                                            to={item.url}
-                                            onClick={() => {
-                                                setCurrentPage(index);
-                                            }}
-                                            className="text-cs-foreground-secondary data-[active=true]:text-sidebar-primary data-[active=false]:hover:text-sidebar-primary"
+            <SidebarContent className="mt-6 px-4">
+                {sidebarNavigationLinks.map((group) => (
+                    <SidebarGroup>
+                        <SidebarGroupLabel className="text-cs-foreground-primary">
+                            {group.groupLabel}
+                        </SidebarGroupLabel>
+                        <SidebarGroupContent>
+                            <SidebarMenu>
+                                {group.groupContent.map((links) => (
+                                    <SidebarMenuItem asChild>
+                                        <SidebarMenuButton
+                                            asChild
+                                            size="base"
+                                            className={`${
+                                                currentPage === links.index
+                                                    ? "bg-blue-100"
+                                                    : ""
+                                            } pl-4 hover:bg-blue-100`}
                                         >
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
+                                            <Link
+                                                to={links.menuURL}
+                                                onClick={() => {
+                                                    setCurrentPage(links.index);
+                                                }}
+                                                className="text-cs-foreground-secondary data-[active=true]:text-sidebar-primary data-[active=false]:hover:text-sidebar-primary"
+                                            >
+                                                <links.menuIcon
+                                                    className={`${
+                                                        currentPage ===
+                                                        links.index
+                                                            ? "text-cs-icon-primary"
+                                                            : ""
+                                                    } hover:bg-blue-100`}
+                                                />
+                                                <span
+                                                    className={`${
+                                                        currentPage ===
+                                                        links.index
+                                                            ? "text-cs-icon-primary"
+                                                            : ""
+                                                    } hover:bg-blue-100 text-sm`}
+                                                >
+                                                    {links.menuTitle}
+                                                </span>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                ))}
+                            </SidebarMenu>
+                        </SidebarGroupContent>
+                    </SidebarGroup>
+                ))}
             </SidebarContent>
         </Sidebar>
     );

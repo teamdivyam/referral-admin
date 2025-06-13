@@ -29,7 +29,14 @@ const AdminService = {
             { remarks }
         ),
 
-    withdrawals: (withdrawalType, page) => API.get("/admin/withdrawals", { params: { withdrawalType, page } }),
+    withdrawals: (withdrawalType, page) =>
+        API.get("/admin/withdrawals", { params: { withdrawalType, page } }),
+
+    referralOverTimeData: (defineTime) => 
+        API.get("/admin/referral-over-time", { params: { defineTime } }),
+
+    latestPayout: (page) => 
+        API.get("/admin/latest-payout", { params: { page } }),
 };
 
 export default AdminService;

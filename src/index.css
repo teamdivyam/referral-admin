@@ -177,3 +177,18 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 } */
+
+.rotateImg {
+  animation: rotate 15s infinite linear;
+  transform-origin: center center;
+}
+
+@keyframes rotate {
+  0% {
+    rotate: 0deg;
+  }
+
+  100% {
+    rotate: 360deg;
+  }
+}

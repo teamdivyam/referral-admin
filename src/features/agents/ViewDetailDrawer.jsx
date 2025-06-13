@@ -69,7 +69,7 @@ export default function ViewDetail({ id }) {
                                     {referralUser.accountStatus ===
                                     "activate" ? (
                                         <div className="flex justify-center border px-2 py-1.5 rounded-sm bg-red-300 cursor-pointer">
-                                            <DeactivateAccountAlert
+                                            <ActivateAccountAlert
                                                 referralUserId={
                                                     referralUser._id
                                                 }
@@ -77,7 +77,7 @@ export default function ViewDetail({ id }) {
                                         </div>
                                     ) : (
                                         <div className="flex justify-center border px-2 py-1.5 rounded-sm bg-red-300 cursor-pointer">
-                                            <ActivateAccountAlert
+                                            <DeactivateAccountAlert
                                                 referralUserId={
                                                     referralUser._id
                                                 }
@@ -114,12 +114,12 @@ export default function ViewDetail({ id }) {
 
                             <div className="my-6.5">
                                 <Tabs
-                                    defaultValue="withdrawalHistory"
+                                    defaultValue="transactionHistory"
                                     className="w-[60vw]"
                                 >
                                     <TabsList className="grid w-full grid-cols-3 bg-cs-foreground-secondary">
-                                        <TabsTrigger value="withdrawals">
-                                            Withdrawal History
+                                        <TabsTrigger value="transactionHistory">
+                                            Transaction History
                                         </TabsTrigger>
                                         <TabsTrigger value="pendingReferral">
                                             Pending Referral
@@ -128,7 +128,7 @@ export default function ViewDetail({ id }) {
                                             Complete Referral
                                         </TabsTrigger>
                                     </TabsList>
-                                    <TabsContent value="withdrawals">
+                                    <TabsContent value="transactionHistory">
                                         <div className="mt-4.5 border">
                                             <WithdrawalHistoryTable
                                                 referralUser={referralUser}

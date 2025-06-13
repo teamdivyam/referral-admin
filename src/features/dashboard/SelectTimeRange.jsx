@@ -5,31 +5,30 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { Calendar, ChevronDown, Droplet } from "lucide-react";
+import { Calendar, ChevronDown } from "lucide-react";
 
-const rangeTime = [
-    "Last 7 Days",
-    "This Month",
-    "Last 7 Weeks",
-    "Last 7 Months",
-];
+const rangeTime = {
+    last7Days: "Last 7 Days",
+    thisMonth: "This Month",
+    lastMonth: "Last Month",
+};
 
-export default function SelectTimeRange() {
-    const [label, setLabel] = useState(0);
+const rangeTimeValue = Object.values(rangeTime);
+const rangeTimeKey = Object.keys(rangeTime);
 
+export default function SelectTimeRange({ defineTime, setDefineTime }) {
     return (
         <DropdownMenu className="">
             <DropdownMenuTrigger asChild>
                 <Button className="w-40 text-cs-foreground-secondary bg-cs-background-primary font-normal border-1 hover:bg-cs-background-secondary hover:inset-ring-1">
                     <Calendar />
-                    {rangeTime[label]}
+                    {rangeTime[defineTime]}
                     <ChevronDown />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-                {rangeTime.map((item, i) => (
-                    <DropdownMenuItem key={i} onClick={() => setLabel(i)}>
+                {rangeTimeValue.map((item, i) => (
+                    <DropdownMenuItem key={i} onClick={() => setDefineTime(rangeTimeKey[i])}>
                         {item}
                     </DropdownMenuItem>
                 ))}
