@@ -9,7 +9,7 @@ export default function Dashboard() {
                 <SummaryAnalytics />
             </div>
 
-            <div className="grid grid-cols-5 gap-6 mt-10">
+            <div className="grid grid-cols-5 grid-rows-3 gap-6 mt-10">
                 <ReferralOverTimeChart />
                 <LatestPayout />
             </div>

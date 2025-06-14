@@ -42,7 +42,7 @@ export default function LatestPayout() {
     });
 
     return (
-        <div className="col-span-5 lg:col-span-2 bg-cs-background-secondary px-6 py-6.5 rounded-xl shadow-sm">
+        <div className="col-span-5 lg:col-span-2 lg:row-span-3 bg-cs-background-secondary px-6 py-6.5 rounded-xl shadow-sm">
             <div className="flex item-center gap-2 mb-4">
                 <CreditCard className="size-8 text-cs-icon-primary" />
                 <span className="text-cs-foreground-primary text-xl font-semibold">
@@ -133,6 +133,7 @@ export default function LatestPayout() {
                                 </TableRow>
                             ))
                         )}
+                        
                     </TableBody>
                 </Table>
             )}

@@ -37,7 +37,7 @@ export default function ReferralOverTimeChart() {
     });
 
     return (
-        <div className="col-span-5 lg:col-span-3 bg-cs-background-secondary px-6 py-6.5 rounded-xl shadow-sm">
+        <div className="row-span-2 col-span-5 lg:col-span-3 bg-cs-background-secondary px-6 py-6.5 rounded-xl shadow-sm">
             <div className="flex justify-between">
                 <SelectTimeRange
                     defineTime={defineTime}
