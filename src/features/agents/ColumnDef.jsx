@@ -114,17 +114,7 @@ export const columns = [
                                     id={referralUser.refer.referralId._id}
                                 />
                             </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                                onSelect={(e) => {
-                                    e.preventDefault();
-                                }}
-                            >
-                                {/* <AssignReferralCodeDialog
-                                    id={referralUser.refer.referralId._id}
-                                    name={agent.name}
-                                /> */}
-                            </DropdownMenuItem>
+                            
                             {/* {agent.accountStatus === "activate" ? (
                                 <DropdownMenuItem
                                     className="text-red-600"

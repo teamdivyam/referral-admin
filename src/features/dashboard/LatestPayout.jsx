@@ -22,6 +22,8 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import DetailPayout from "./DetailPayout";
 
+const PAGE_LIMIT = 7;
+
 const fetchLatestPayout = async (page) => {
     try {
         const response = await AdminService.latestPayout(page);
@@ -37,8 +39,8 @@ const fetchLatestPayout = async (page) => {
 export default function LatestPayout() {
     const [page, setPage] = useState(1);
     const { data, isLoading, isError } = useQuery({
-        queryKey: ["referralOverTime"],
-        queryFn: () => fetchLatestPayout(),
+        queryKey: ["referralOverTime", page],
+        queryFn: () => fetchLatestPayout(page),
     });
 
     return (
@@ -146,12 +148,12 @@ export default function LatestPayout() {
                     Prev
                 </Button>
                 <Button variant="outline" disabled={true}>
-                    {Math.ceil(data?.rows / 50)}
+                    {page}
                 </Button>
                 <Button
                     variant="outline"
                     disabled={
-                        data?.rows === 0 || page === Math.ceil(data?.rows / 50)
+                        data?.rows === 0 || page === Math.ceil(data?.rows / PAGE_LIMIT)
                     }
                     onClick={() => setPage(page + 1)}
                 >

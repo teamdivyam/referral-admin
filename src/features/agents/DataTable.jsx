@@ -7,10 +7,10 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-
+                 
 export default function DataTable({ table }) {
     return (
-        <>
+        <div className="overflow-auto">
             <Table className="mt-4 bg-cs-background-secondary rounded-md max-h-[540px] relative">
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
@@ -55,6 +55,6 @@ export default function DataTable({ table }) {
                     ))}
                 </TableBody>
             </Table>
-        </>
+        </div>
     );
 }

@@ -1,0 +1,21 @@
+{
+    "name": "Divyam Referral Dashboard",
+    "short_name": "Divyam Referral",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ff5722",
+    "description": "Dashboard for divyam referral program",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

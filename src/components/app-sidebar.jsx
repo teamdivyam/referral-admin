@@ -11,8 +11,9 @@ import {
 } from "@/components/ui/sidebar";
 import { Home, Settings, Users } from "lucide-react";
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { PageContext } from "../contexts/PageContext";
+import { Button } from "@/components/ui/button";
 
 const sidebarNavigationLinks = [
     {
@@ -54,6 +55,13 @@ const sidebarNavigationLinks = [
 
 export function AppSidebar() {
     const { currentPage, setCurrentPage } = useContext(PageContext);
+    const navigate = useNavigate();
+
+    const logout = async () => {
+        localStorage.removeItem("token");
+
+        navigate("/login")
+    };
 
     return (
         <Sidebar className="border-r">
@@ -62,7 +70,7 @@ export function AppSidebar() {
                     <img
                         src="/img/logo.png"
                         alt="logo"
-                        className="w-16 invert rotateImg"
+                        className="w-16 invert rotateImg dark:invert-0"
                     />
                     <div className="flex flex-col">
                         <span className="text-cs-foreground-primary font-semibold text-xl">
@@ -114,7 +122,7 @@ export function AppSidebar() {
                                                         links.index
                                                             ? "text-cs-icon-primary"
                                                             : ""
-                                                    } hover:bg-blue-100 text-sm`}
+                                                    } text-sm`}
                                                 >
                                                     {links.menuTitle}
                                                 </span>
@@ -126,6 +134,13 @@ export function AppSidebar() {
                         </SidebarGroupContent>
                     </SidebarGroup>
                 ))}
+                <Button
+                    variant="outline"
+                    className="bg-cs-icon-primary text-white cursor-pointer hover:bg-cs-icon-primary/85 hover:text-white"
+                    onClick={logout}
+                >
+                    Logout
+                </Button>
             </SidebarContent>
         </Sidebar>
     );

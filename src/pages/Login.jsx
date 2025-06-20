@@ -40,7 +40,7 @@ export default function Login() {
                 const token = response.data.token;
                 localStorage.setItem("token", token);
 
-                navigate("/dashboard");
+                await navigate("/dashboard");
             }
         } catch (_) {
             toast(fetchError);

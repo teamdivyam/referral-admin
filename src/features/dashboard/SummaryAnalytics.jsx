@@ -3,14 +3,7 @@ import LoadingCircle from "../../components/loading-circle";
 import AdminService from "../../services/admin.service";
 
 import { useQuery } from "@tanstack/react-query";
-import {
-    Activity,
-    Calendar,
-    IndianRupee,
-    ScrollText,
-    Sigma,
-    Users,
-} from "lucide-react";
+import { IndianRupee, ScrollText, Sigma, Users } from "lucide-react";
 import { useContext } from "react";
 import { PageContext } from "../../contexts/PageContext";
 
@@ -35,7 +28,6 @@ export default function SummaryAnalytics() {
     });
 
     return (
-        
         <>
             <Link to="/users" onClick={() => setCurrentPage(1)}>
                 <div className="flex px-2.5 py-4.5 gap-5.5 bg-cs-background-secondary rounded-lg shadow-sm transition-shadow duration-250 hover:shadow-md">
@@ -74,7 +66,7 @@ export default function SummaryAnalytics() {
                     </span>
                 </div>
             </div>
-            <Link to="/withdrawals"  onClick={() => setCurrentPage(2)}>
+            <Link to="/withdrawals" onClick={() => setCurrentPage(2)}>
                 <div className="flex px-2.5 py-4.5 gap-5.5 bg-cs-background-secondary rounded-lg shadow-sm transition-shadow duration-250 hover:shadow-md">
                     <div className="flex justify-center items-center">
                         <ScrollText className="size-8 text-cs-icon-primary" />
