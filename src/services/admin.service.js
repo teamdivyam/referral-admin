@@ -48,6 +48,11 @@ const AdminService = {
 
     referralUserBalance: (referralUserId) =>
         API.get("/admin/balance", { params: { referralUserId } }),
+
+    controlCronJob: (state) => API.patch(`/admin/cron/${state}`),
+
+    getCronJobStatus: () => 
+        API.get("/admin/cron/status")
 };
 
 export default AdminService;
