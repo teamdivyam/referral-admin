@@ -192,3 +192,37 @@
     rotate: 360deg;
   }
 }
+
+.error-fallback {
+  padding: 1rem;
+  background: #ffe6e6;
+  border: 1px solid #ff9999;
+  border-radius: 4px;
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.error-fallback__title {
+  color: #cc0000;
+  margin-top: 0;
+}
+
+.error-fallback__message {
+  font-weight: bold;
+}
+
+.error-fallback__stack {
+  white-space: pre-wrap;
+  font-family: monospace;
+  font-size: 0.8rem;
+  overflow-x: auto;
+}
+
+.error-fallback__reset-button {
+  padding: 0.5rem 1rem;
+  background: #cc0000;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

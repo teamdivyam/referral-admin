@@ -16,7 +16,6 @@ export default function ActivateAccountAlert({ referralUserId }) {
 
     const handleClick = async () => {
 
-        console.log("Click on deactivate account.")
         try {
             const response = await AdminService.activateAccount(referralUserId);
 

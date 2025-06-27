@@ -8,13 +8,14 @@ import { PageContext } from "../contexts/PageContext";
 
 const pageHeaders = {
     dashboard: { title: "Main Dashboard", index: 0 },
-    users: { title: "Users Management", index: 1 },
+    referral: { title: "Referral", index: 1 },
+    users: { title: "Users Management", index: 2 },
     withdrawals: {
         title: "Withdrawals",
-        index: 2,
+        index: 3,
     },
-    help: { title: "Helps", index: 3 },
-    settings: { title: "Settings", index: 4 },
+    help: { title: "Helps", index: 4 },
+    settings: { title: "Settings", index: 5 },
 };
 
 export default function Layout() {

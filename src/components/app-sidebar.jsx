@@ -9,7 +9,7 @@ import {
     SidebarGroupContent,
     SidebarGroupLabel,
 } from "@/components/ui/sidebar";
-import { Home, Settings, Users } from "lucide-react";
+import { Home, Info, Settings, Users, Wallet } from "lucide-react";
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { PageContext } from "../contexts/PageContext";
@@ -27,24 +27,30 @@ const sidebarNavigationLinks = [
             },
             {
                 index: 1,
+                menuTitle: "Referrals",
+                menuURL: "/referral",
+                menuIcon: Home,
+            },
+            {
+                index: 2,
                 menuTitle: "Users Managment",
                 menuURL: "/users",
                 menuIcon: Users,
             },
             {
-                index: 2,
+                index: 3,
                 menuTitle: "Withdrawals",
                 menuURL: "/withdrawals",
-                menuIcon: Users,
+                menuIcon: Wallet,
             },
         ],
     },
     {
         groupLabel: "ACCOUNT",
         groupContent: [
-            { index: 3, menuTitle: "Help", menuURL: "/help", menuIcon: Home },
+            { index: 4, menuTitle: "Help", menuURL: "/help", menuIcon: Info },
             {
-                index: 4,
+                index: 5,
                 menuTitle: "Settings",
                 menuURL: "/settings",
                 menuIcon: Settings,

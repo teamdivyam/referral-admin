@@ -70,10 +70,6 @@ export default function RejectedWithdrawals() {
             ),
     });
 
-    if (isLoading) {
-        return <div>loading...</div>;
-    }
-
     return (
         <>
             <div className="flex justify-between items-center">
@@ -154,7 +150,7 @@ export default function RejectedWithdrawals() {
                     <Button
                         variant="outline"
                         disabled={
-                            data.rows === 0 ||
+                            data?.rows === 0 ||
                             page === Math.ceil(data?.rows / 50)
                         }
                         onClick={() => setPage(page + 1)}

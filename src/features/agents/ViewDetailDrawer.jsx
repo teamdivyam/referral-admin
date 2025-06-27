@@ -67,8 +67,8 @@ export default function ViewDetail({ id }) {
                                 </h2>
                                 <div className="flex gap-3.5 mt-2.5">
                                     {referralUser.accountStatus ===
-                                    "activate" ? (
-                                        <div className="flex justify-center border px-2 py-1.5 rounded-sm bg-red-300 cursor-pointer">
+                                    "deactive" ? (
+                                        <div className="flex justify-center border px-2 py-1.5 rounded-sm bg-green-300 cursor-pointer">
                                             <ActivateAccountAlert
                                                 referralUserId={
                                                     referralUser._id

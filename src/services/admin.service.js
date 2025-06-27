@@ -12,10 +12,10 @@ const AdminService = {
         API.post(`/admin/assign-referral-code/${agentId}`, { quantity }),
 
     activateAccount: (referralUserId) =>
-        API.put(`/admin/change-account-status/activate/${referralUserId}`),
+        API.patch(`/admin/change-account-status/activate/${referralUserId}`),
 
     deactivateAccount: (referralUserId) =>
-        API.put(`/admin/change-account-status/deactivate/${referralUserId}`),
+        API.patch(`/admin/change-account-status/deactivate/${referralUserId}`),
 
     approveWithdrawalRequest: (withdrawalId, transactionId, remarks) =>
         API.patch(
@@ -29,10 +29,10 @@ const AdminService = {
             { remarks }
         ),
 
-    withdrawals: (withdrawalType, page, search, fromDate, toDate) =>
+    withdrawals: (withdrawalStatus, page, search, fromDate, toDate) =>
         API.get("/admin/withdrawals", {
             params: {
-                withdrawalType,
+                withdrawalStatus,
                 page,
                 search,
                 fromDate: fromDate || undefined,
@@ -51,8 +51,18 @@ const AdminService = {
 
     controlCronJob: (state) => API.patch(`/admin/cron/${state}`),
 
-    getCronJobStatus: () => 
-        API.get("/admin/cron/status")
+    getCronJobStatus: () => API.get("/admin/cron/status"),
+
+    getReferralSettings: () => API.get("/admin/referral-settings"),
+    
+    updateReferralSettings: (name, value) =>
+        API.patch("/admin/update-referral-settings", { name, value }),
+
+    updateReferralSchedule: (schedule, scheduleTime) =>
+        API.patch("/admin/update-referral-schedule", {
+            schedule,
+            scheduleTime,
+        }),
 };
 
 export default AdminService;

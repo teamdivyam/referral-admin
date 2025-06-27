@@ -13,6 +13,8 @@ import Login from "../pages/Login";
 import Layout from "../components/Layout";
 import ProtectedRoute from "./ProtectedRoute";
 import Withdrawals from "../pages/Withdrawals";
+import Help from "../pages/Help";
+import Referral from "../pages/Referral";
 
 export default function AppRoutes() {
     return (
@@ -26,7 +28,9 @@ export default function AppRoutes() {
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/users" element={<Users />} />
                         <Route path="/withdrawals" element={<Withdrawals />} />
+                        <Route path="/help" element={<Help />} />
                         <Route path="/settings" element={<Settings />} />
+                        <Route path="/referral" element={<Referral />} />
                     </Route>
                 </Route>
             </Routes>

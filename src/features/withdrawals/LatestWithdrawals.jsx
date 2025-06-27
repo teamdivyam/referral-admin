@@ -36,7 +36,7 @@ import { Calendar } from "@/components/ui/calendar";
 const fetchWithdrawals = async (page, search, fromDate, toDate) => {
     try {
         const response = await AdminService.withdrawals(
-            "latest",
+            "pending",
             page,
             search,
             fromDate,
