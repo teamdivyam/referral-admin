@@ -69,6 +69,10 @@ export const columns = [
         header: () => <div className="text-right">Total Earn</div>,
         cell: (info) => <div className="text-right">{info.getValue()}</div>,
     }),
+    columnHelper.accessor("refer.referralId.wallet.pendingWithdrawal", {
+        header: () => <div className="text-right">Pending Withdrawal</div>,
+        cell: (info) => <div className="text-right">{info.getValue()}</div>,
+    }),
     columnHelper.accessor("refer.referralId.wallet.balance", {
         header: () => <div className="text-right">Balance</div>,
         cell: (info) => <div className="text-right">{info.getValue()}</div>,

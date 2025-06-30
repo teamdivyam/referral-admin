@@ -54,7 +54,7 @@ const AdminService = {
     getCronJobStatus: () => API.get("/admin/cron/status"),
 
     getReferralSettings: () => API.get("/admin/referral-settings"),
-    
+
     updateReferralSettings: (name, value) =>
         API.patch("/admin/update-referral-settings", { name, value }),
 
@@ -63,6 +63,9 @@ const AdminService = {
             schedule,
             scheduleTime,
         }),
+
+    getReferrals: (referralStatus, page) =>
+        API.get("/admin/referral", { params: { referralStatus, page } }),
 };
 
 export default AdminService;
