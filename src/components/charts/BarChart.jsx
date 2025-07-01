@@ -23,7 +23,7 @@ export default function Component({
                 />
                 <ChartTooltip content={<ChartTooltipContent />} />
                 <ChartLegend content={<ChartLegendContent />} />
-                <Bar dataKey="referral" fill="var(--color-cs-icon-primary)" radius={4} />
+                <Bar dataKey="refers" fill="var(--color-cs-icon-primary)" radius={4} />
             </BarChart>
         </ChartContainer>
     );

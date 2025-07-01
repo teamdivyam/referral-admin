@@ -81,7 +81,7 @@ export default function SummaryDrawer({ id }) {
                         </div>
 
                         <div className="grid grid-cols-2 gap-2.5 my-6.5 mx-4.5">
-                            {referralUser.accountStatus === "activate" ? (
+                            {referralUser.accountStatus === "active" ? (
                                 <div className="flex justify-center border px-2 py-1.5 rounded-sm bg-red-300 cursor-pointer">
                                     <DeactivateAccountAlert
                                         referralUserId={referralUser._id}
