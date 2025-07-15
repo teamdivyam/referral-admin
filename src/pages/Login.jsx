@@ -7,16 +7,18 @@ import {
     CardTitle,
     CardDescription,
     CardContent,
+    CardFooter,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { API_URL } from "../lib/constant";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const fetchLogin = async (formData) => {
     try {
@@ -24,7 +26,6 @@ const fetchLogin = async (formData) => {
             `${API_URL}/auth/admin/login`,
             formData
         );
-
         return response.data;
     } catch (error) {
         throw error;
@@ -51,7 +52,10 @@ export default function Login() {
             }
         },
         onError: (error) => {
-            toast(error.response.data.error.message);
+            toast.error(
+                error.response?.data?.error?.message ||
+                    "Login failed. Please try again."
+            );
             reset();
         },
     });
@@ -60,69 +64,149 @@ export default function Login() {
         mutation.mutate(formData);
     };
 
+    //
     return (
-        <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-            <div className="w-full max-w-sm">
-                <div className="flex flex-col gap-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-2xl">Login</CardTitle>
-                            <CardDescription>
-                                Enter your email below to login to your account
+        <div className="min-h-svh w-full bg-gradient-to-br from-slate-900 to-slate-700 flex items-center justify-center p-4">
+            <div className="w-full max-w-md">
+                <Card className="shadow-lg rounded-xl overflow-hidden border-0 bg-cs-background-primary">
+                    <CardHeader className="text-cs-foreground-primary p-8 pb-6">
+                        <div className="flex flex-col items-center">
+                            <Avatar className="h-16 w-16">
+                                <AvatarImage
+                                    src="/img/logo.png"
+                                    alt="Company Logo"
+                                    className="w-16 invert rotateImg dark:invert-0"
+                                />
+                                <AvatarFallback>DV</AvatarFallback>
+                            </Avatar>
+                            <CardTitle className="text-3xl font-bold">
+                                Welcome Back
+                            </CardTitle>
+                            <CardDescription className="text-cs-foreground-primary mt-2">
+                                Sign in to access your dashboard
                             </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <form onSubmit={handleSubmit(onSubmit)}>
-                                <div className="flex flex-col gap-6">
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="email">Email</Label>
-                                        <Input
-                                            {...register("email")}
-                                            type="email"
-                                            placeholder="m@email.com"
-                                            required
-                                        />
-                                        {errors.email && (
-                                            <p className="text-red-200 text-sm">
-                                                {errors.email?.message}
-                                            </p>
-                                        )}
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <div className="flex items-center">
-                                            <Label htmlFor="password">
-                                                Password
-                                            </Label>
-                                        </div>
-                                        <Input
-                                            {...register("password")}
-                                            type="password"
-                                            required
-                                        />
-                                        {errors.password && (
-                                            <p className="text-red-200 text-sm">
-                                                {errors.email?.password}
-                                            </p>
-                                        )}
-                                    </div>
-                                    <Button
-                                        type="submit"
-                                        className="w-full"
-                                        disabled={isSubmitting}
+                        </div>
+                    </CardHeader>
+                    <CardContent className="p-8 pt-6">
+                        <form
+                            onSubmit={handleSubmit(onSubmit)}
+                            className="space-y-6"
+                        >
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label
+                                        htmlFor="email"
+                                        className="text-cs-foreground-primary font-medium"
                                     >
-                                        {mutation.isPending ? (
-                                            <>
-                                                <Loader2 className="animate-spin" />
-                                                <span>Logging</span>
-                                            </>
-                                        ) : (
-                                            <>Login</>
-                                        )}
-                                    </Button>
+                                        Email Address
+                                    </Label>
+                                    <Input
+                                        {...register("email")}
+                                        type="email"
+                                        // ref={inputRef}
+                                        placeholder="your@email.com"
+                                        className={`py-3 px-4 ${
+                                            errors.email
+                                                ? "border-red-300 focus:ring-red-200"
+                                                : "focus:ring-blue-200"
+                                        }`}
+                                    />
+                                    {errors.email && (
+                                        <p className="text-red-500 text-sm mt-1 flex items-center">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-4 w-4 mr-1"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                />
+                                            </svg>
+                                            {errors.email?.message}
+                                        </p>
+                                    )}
                                 </div>
-                            </form>
-                        </CardContent>
-                    </Card>
+                                <div className="space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <Label
+                                            htmlFor="password"
+                                            className="text-cs-foreground-primary font-medium"
+                                        >
+                                            Password
+                                        </Label>
+                                        <a
+                                            href="#"
+                                            className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+                                        >
+                                            Forgot password?
+                                        </a>
+                                    </div>
+                                    <Input
+                                        {...register("password")}
+                                        type="password"
+                                        placeholder="••••••••"
+                                        className={`py-3 px-4 ${
+                                            errors.password
+                                                ? "border-red-300 focus:ring-red-200"
+                                                : "focus:ring-blue-200"
+                                        }`}
+                                    />
+                                    {errors.password && (
+                                        <p className="text-red-500 text-sm mt-1 flex items-center">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-4 w-4 mr-1"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                />
+                                            </svg>
+                                            {errors.password?.message}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                            <Button
+                                type="submit"
+                                className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+                                disabled={isSubmitting}
+                            >
+                                {mutation.isPending ? (
+                                    <>
+                                        <Loader2 className="animate-spin mr-2 h-5 w-5" />
+                                        <span>Signing in...</span>
+                                    </>
+                                ) : (
+                                    <span>Sign In</span>
+                                )}
+                            </Button>
+                        </form>
+                    </CardContent>
+                    <CardFooter className="p-8 pt-0">
+                        <div className="text-center text-sm text-cs-foreground-primary">
+                            Don't have an account?{" "}
+                            <Link
+                                to="#"
+                                className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+                            >
+                                Contact administrator
+                            </Link>
+                        </div>
+                    </CardFooter>
+                </Card>
+                <div className="mt-6 text-center text-xs text-white">
+                    © {new Date().getFullYear()} Divyam. All rights reserved.
                 </div>
             </div>
         </div>
