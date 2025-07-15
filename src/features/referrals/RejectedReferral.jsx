@@ -9,7 +9,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import AdminService from "../../services/admin.service";
-import { useState } from "react";
+import { useReducer } from "react";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -19,152 +19,257 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Info, MoreHorizontal, Search } from "lucide-react";
+    MoreHorizontal,
+    Filter,
+    X,
+    Calendar as CalendarIcon,
+    IndianRupee,
+} from "lucide-react";
 import Status from "../common/Status";
 import LoadingCircle from "../../components/loading-circle";
-import { Input } from "@/components/ui/input";
-// // import { useDebounce } from "../../hooks/useDebounce";
+import { useDebounce } from "../../hooks/useDebounce";
 import { Calendar } from "@/components/ui/calendar";
-import ViewDetailPendingReferral from "./ViewDetailPendingReferral";
 import ViewDetailRejectedReferral from "./ViewDetailRejectedReferral";
+import FilterDialogReferral from "./FilterDialogReferral";
+import { Badge } from "@/components/ui/badge";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 
-const fetchRejectedReferrals = async (page, search, fromDate, toDate) => {
+const fetchRejectedReferrals = async ({
+    page,
+    search,
+    fromDate,
+    toDate,
+    searchIn,
+    id,
+    searchIdIn,
+}) => {
     try {
-        const response = await AdminService.getReferrals(
-            "cancelled",
-            page
-            // search,
-            // fromDate,
-            // toDate
-        );
+        const response = await AdminService.getReferrals({
+            referralStatus: "cancelled",
+            page,
+            search,
+            fromDate,
+            toDate,
+            searchIn,
+            id,
+            searchIdIn,
+        });
+
         return response.data;
     } catch (error) {
         console.log(error);
     }
 };
 
+const reducerFn = (state, action) => {
+    switch (action.type) {
+        case "nextPage":
+            return { ...state, page: state.page + 1 };
+        case "previousPage":
+            return { ...state, page: state.page - 1 };
+        case "defaultPage":
+            return { ...state, page: 1};
+        case "search":
+            return { ...state, search: action.value };
+        case "setFromDate":
+            return { ...state, fromDate: action.value };
+        case "setToDate":
+            return { ...state, toDate: action.value };
+        case "setSearchIn":
+            return { ...state, searchIn: action.value };
+        case "setId":
+            return { ...state, id: action.value };
+        case "setSearchIdIn":
+            return { ...state, searchIdIn: action.value };
+        case "clearDate":
+            return { ...state, fromDate: undefined, toDate: undefined };
+        case "clearId":
+            return { ...state, id: "" };
+        case "clearFilter":
+            return {
+                ...state,
+                fromDate: undefined,
+                toDate: undefined,
+                search: "",
+                id: "",
+            };
+
+        default:
+            return state;
+    }
+};
+
+const initialState = {
+    page: 1,
+    fromDate: undefined,
+    toDate: undefined,
+    search: "",
+    searchIn: "referrer",
+    id: "",
+    searchIdIn: "referId",
+};
+
 export default function RejectedReferral() {
-    // const [search, setSearch] = useState("");
-    const [page, setPage] = useState(1);
-    // const debouncedSearchTerm = useDebounce(search, 500);
-    const [selectFromDate, setSelectFromDate] = useState(undefined);
-    const [selectToDate, setSelectToDate] = useState(undefined);
+    const [state, dispatch] = useReducer(reducerFn, initialState);
+    const debounceSearch = useDebounce(state.search, 500);
+    const debounceSearchId = useDebounce(state.id, 500);
+
     const { data, isLoading } = useQuery({
         queryKey: [
             "rejected-referrals",
-            page,
-            // debouncedSearchTerm,
-            // selectFromDate,
-            // selectToDate,
+            debounceSearch,
+            debounceSearchId,
+            state.page,
+            state.fromDate,
+            state.toDate,
+            state.searchIn,
+            state.searchIdIn,
         ],
         queryFn: () =>
-            fetchRejectedReferrals(
-                page
-                // debouncedSearchTerm,
-                // selectFromDate,
-                // selectToDate
-            ),
+            fetchRejectedReferrals({
+                page: state.page,
+                search: debounceSearch,
+                fromDate: state.fromDate,
+                toDate: state.toDate,
+                searchIn: state.searchIn,
+                id: debounceSearchId,
+                searchIdIn: state.searchIdIn,
+            }),
     });
 
     return (
         <>
-            <div className="flex justify-between items-center">
-                <div className="text-xl font-semibold text-cs-foreground-primary">
-                    {data?.rows} Rows
-                </div>
-                {/* <div className="mt-3.5 flex justify-end gap-2.5">
-                    <div className="flex gap-2.5">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    className="font-normal cursor-pointer text-cs-foreground-primary"
-                                >
-                                    Select Date From:{" "}
-                                    {selectFromDate &&
-                                        format(selectFromDate, "dd/MM/yyyy")}
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <Calendar
-                                    mode="single"
-                                    defaultMonth={selectFromDate || new Date()}
-                                    selected={selectFromDate || new Date()}
-                                    onSelect={(d) => {
-                                        setSelectFromDate(d);
-                                        if (selectToDate && d > selectToDate) {
-                                            setSelectToDate(d);
-                                        }
-                                    }}
-                                />
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    className="font-normal cursor-pointer text-cs-foreground-primary"
-                                >
-                                    Select Date To:{" "}
-                                    {selectToDate &&
-                                        format(selectToDate, "dd/MM/yyyy")}
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <Calendar
-                                    mode="single"
-                                    defaultMonth={selectToDate || new Date()}
-                                    selected={selectToDate || new Date()}
-                                    onSelect={(d) => {
-                                        setSelectToDate(d);
-                                        if (d < selectFromDate) {
-                                            setSelectFromDate(d);
-                                        }
-                                    }}
-                                />
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+            <div className="mt-4 overflow-auto grid">
+                <div className="bg-cs-background-secondary  px-4 py-3 border rounded-t-lg  gap-3 shadow-sm flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                            Referral Records
+                        </h3>
+                        <Badge variant="outline" className="px-3 py-1">
+                            <span className="font-medium">
+                                {data?.rows || 0}
+                            </span>{" "}
+                            records found
+                        </Badge>
                     </div>
-                    <div className="relative w-full max-w-md">
-                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
-                        <Input
-                            placeholder="User Id, Email and Name"
-                            className="pl-10 bg-cs-background-secondary focus-visible:ring-1"
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
-                    </div>
-                    <Button
-                        variant="outline"
-                        disabled={page === 1}
-                        onClick={() => setPage(page - 1)}
-                    >
-                        Prev
-                    </Button>
-                    <Button variant="outline" disabled={true}>
-                        {Math.ceil(data?.rows / 50)}
-                    </Button>
-                    <Button
-                        variant="outline"
-                        disabled={
-                            data?.rows === 0 ||
-                            page === Math.ceil(data?.rows / 50)
-                        }
-                        onClick={() => setPage(page + 1)}
-                    >
-                        Next
-                    </Button>
-                </div> */}
-            </div>
 
-            <div className="overflow-auto">
-                <Table className="mt-4 bg-cs-background-secondary rounded-md max-h-[540px] relative">
+                    <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2">
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        className="w-[150px] justify-start text-left font-normal"
+                                    >
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {state.fromDate ? (
+                                            format(
+                                                state.fromDate,
+                                                "MMM dd, yyyy"
+                                            )
+                                        ) : (
+                                            <span>From date</span>
+                                        )}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                    className="w-auto p-0"
+                                    align="start"
+                                >
+                                    <Calendar
+                                        mode="single"
+                                        selected={state.fromDate}
+                                        onSelect={(d) => {
+                                            dispatch({
+                                                type: "setFromDate",
+                                                value: d,
+                                            });
+                                            if (
+                                                state.toDate &&
+                                                d > state.toDate
+                                            ) {
+                                                dispatch({
+                                                    type: "setToDate",
+                                                    value: d,
+                                                });
+                                            }
+                                        }}
+                                        initialFocus
+                                    />
+                                </PopoverContent>
+                            </Popover>
+
+                            <span className="text-gray-500 mx-1">to</span>
+
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        className="w-[150px] justify-start text-left font-normal"
+                                        disabled={!state.fromDate}
+                                    >
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {state.toDate ? (
+                                            format(state.toDate, "MMM dd, yyyy")
+                                        ) : (
+                                            <span>To date</span>
+                                        )}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                    className="w-auto p-0"
+                                    align="start"
+                                >
+                                    <Calendar
+                                        mode="single"
+                                        selected={state.toDate}
+                                        onSelect={(d) => {
+                                            dispatch({
+                                                type: "setToDate",
+                                                value: d,
+                                            });
+                                            if (d < state.fromDate) {
+                                                dispatch({
+                                                    type: "setFromDate",
+                                                    value: d,
+                                                });
+                                            }
+                                        }}
+                                        initialFocus
+                                        fromDate={state.fromDate}
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+
+                        <div className="flex gap-2">
+                            <FilterDialogReferral
+                                state={state}
+                                dispatch={dispatch}
+                                
+                            />
+
+                            <Button
+                                variant="ghost"
+                                onClick={() =>
+                                    dispatch({ type: "clearFilter" })
+                                }
+                                className="text-destructive hover:text-destructive/80"
+                            >
+                                <X className="h-4 w-4" />
+                                <span className="sr-only">Clear filters</span>
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+                <Table className="bg-cs-background-secondary rounded-b-md border max-h-[540px] relative">
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="py-3.5 text-cs-foreground-primary  font-base sticky top-0 z-1 bg-cs-background-secondary">
+                            <TableHead className="pl-4 py-3.5 text-cs-foreground-primary  font-base sticky top-0 z-1 bg-cs-background-secondary">
                                 ID
                             </TableHead>
                             <TableHead className="py-3.5 text-cs-foreground-primary  font-base sticky top-0 z-1 bg-cs-background-secondary">
@@ -188,7 +293,7 @@ export default function RejectedReferral() {
                             <TableHead className="py-3.5 text-cs-foreground-primary font-base sticky top-0 z-1 bg-cs-background-secondary">
                                 Status
                             </TableHead>
-                            <TableHead className="text-right py-3.5 text-cs-foreground-primary  font-base sticky top-0 z-1 bg-cs-background-secondary">
+                            <TableHead className="text-right pr-4  py-3.5 text-cs-foreground-primary  font-base sticky top-0 z-1 bg-cs-background-secondary">
                                 Actions
                             </TableHead>
                         </TableRow>
@@ -205,44 +310,52 @@ export default function RejectedReferral() {
                         ) : (
                             data?.referrals.map((referral) => (
                                 <TableRow key={referral.ref_id}>
-                                    <TableCell className="text-slate-800">
+                                    <TableCell className="pl-4 text-cs-foreground-primary">
                                         {referral.ref_id}
                                     </TableCell>
-                                    <TableCell className="text-slate-800">
-                                        {referral.referrer_user_id.fullName ||
-                                            referral.referrer_user_id.email ||
-                                            referral.referrer_user_id.mobileNum}
+                                    <TableCell className="text-cs-foreground-primary">
+                                        {referral.referrer.fullName ||
+                                            referral.referrer.email ||
+                                            referral.referrer.mobileNum}
                                     </TableCell>
-                                    <TableCell className="text-slate-800">
-                                        {referral.referee_user_id.fullName ||
-                                            referral.referee_user_id.email ||
-                                            referral.referee_user_id.mobileNum}
+                                    <TableCell className="text-cs-foreground-primary">
+                                        {referral.referee.fullName ||
+                                            referral.referee.email ||
+                                            referral.referee.mobileNum}
                                     </TableCell>
-                                    <TableCell className="text-slate-800">
+                                    <TableCell className="text-cs-foreground-primary">
                                         {format(
                                             referral.createdAt,
                                             "dd/MM/yyyy"
                                         )}
                                     </TableCell>
-                                    <TableCell className="text-slate-800">
+                                    <TableCell className="text-cs-foreground-primary">
                                         {format(
                                             referral.processed_at,
                                             "dd/MM/yyyy"
                                         ) || "nil"}
                                     </TableCell>
-                                    <TableCell className="text-slate-800">
+                                    <TableCell className="text-cs-foreground-primary">
                                         {referral.order
                                             .slice(referral.order.length - 4)
                                             .toUpperCase()}
                                     </TableCell>
-                                    <TableCell className="text-slate-800">
-                                        {referral.amount}
+                                    <TableCell className="text-cs-foreground-primary">
+                                        <div className="flex items-center">
+                                            <IndianRupee
+                                                size={12}
+                                                className="mt-[1px]"
+                                            />
+                                            <span>
+                                                {referral.amount.toFixed(2)}
+                                            </span>
+                                        </div>
                                     </TableCell>
 
-                                    <TableCell className="text-slate-800">
+                                    <TableCell className="text-cs-foreground-primary">
                                         <Status statusType={referral.status} />
                                     </TableCell>
-                                    <TableCell className="text-right">
+                                    <TableCell className="pr-4 text-right">
                                         <div className="flex justify-end">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
@@ -256,9 +369,9 @@ export default function RejectedReferral() {
                                                         <MoreHorizontal className="h-4 w-4" />
                                                     </Button>
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuLabel>
-                                                        Actions
+                                                <DropdownMenuContent align="end" className="bg-cs-background-primary">
+                                                    <DropdownMenuLabel className="text-sm text-cs-foreground-primary font-medium">
+                                                        Menu
                                                     </DropdownMenuLabel>
                                                     <DropdownMenuItem
                                                         className="cursor-pointer"
@@ -271,30 +384,6 @@ export default function RejectedReferral() {
                                                                 referral
                                                             }
                                                         />
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem
-                                                        className="cursor-pointer"
-                                                        onSelect={(e) => {
-                                                            e.preventDefault();
-                                                        }}
-                                                    >
-                                                        {/* <ApprovedWithdrawalRequestAlert
-                                                            withdrawalId={
-                                                                request._id
-                                                            }
-                                                        /> */}
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem
-                                                        className="cursor-pointer"
-                                                        onSelect={(e) => {
-                                                            e.preventDefault();
-                                                        }}
-                                                    >
-                                                        {/* <RejectWithdrawalRequestAlert
-                                                            withdrawalId={
-                                                                request._id
-                                                            }
-                                                        /> */}
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
@@ -310,20 +399,21 @@ export default function RejectedReferral() {
             <div className="mt-3.5 flex justify-end gap-2.5">
                 <Button
                     variant="outline"
-                    disabled={page === 1}
-                    onClick={() => setPage(page - 1)}
+                    disabled={state.page === 1}
+                    onClick={() => dispatch({ type: "previousPage" })}
                 >
                     Prev
                 </Button>
                 <Button variant="outline" disabled={true}>
-                    {Math.ceil(data?.rows / 50)}
+                    {state.page}
                 </Button>
                 <Button
                     variant="outline"
                     disabled={
-                        data?.rows === 0 || page === Math.ceil(data?.rows / 50)
+                        data?.rows === 0 ||
+                        state.page === Math.ceil(data?.rows / 50)
                     }
-                    onClick={() => setPage(page + 1)}
+                    onClick={() => dispatch({ type: "nextPage" })}
                 >
                     Next
                 </Button>

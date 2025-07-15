@@ -118,7 +118,7 @@ export const columns = [
                                     id={referralUser.refer.referralId._id}
                                 />
                             </DropdownMenuItem>
-                            
+
                             {/* {agent.accountStatus === "activate" ? (
                                 <DropdownMenuItem
                                     className="text-red-600"

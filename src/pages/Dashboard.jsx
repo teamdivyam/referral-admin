@@ -4,15 +4,12 @@ import LatestPayout from "../features/dashboard/LatestPayout";
 
 export default function Dashboard() {
     return (
-        <>
-            <div className="grid grid-cols-1 gap-5.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                <SummaryAnalytics />
-            </div>
-
-            <div className="grid grid-cols-5 grid-rows-3 gap-6 mt-10">
+        <div>
+            <SummaryAnalytics />
+            <div className="grid grid-cols-5 gap-3.5 mt-4.5">
                 <ReferralOverTimeChart />
                 <LatestPayout />
             </div>
-        </>
+        </div>
     );
 }

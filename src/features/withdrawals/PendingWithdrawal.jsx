@@ -8,7 +8,8 @@ import {
 } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { useReducer } from "react";
+import AdminService from "../../services/admin.service";
+import { useEffect, useReducer, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -17,42 +18,42 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Separator } from "@/components/ui/separator";
 import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+    CalendarIcon,
+    IndianRupee,
+    Info,
     MoreHorizontal,
     X,
-    Calendar as CalendarIcon,
-    IndianRupee,
 } from "lucide-react";
-import LoadingCircle from "../components/loading-circle";
-import { useDebounce } from "../hooks/useDebounce";
+import Status from "../common/Status";
+import LoadingCircle from "../../components/loading-circle";
+import { useDebounce } from "../../hooks/useDebounce";
 import { Calendar } from "@/components/ui/calendar";
-// import FilterDialogReferral from "./FilterDialogReferral";
+import FilterDialog from "./FilterWithdrawalDialog";
+import PendingRequestDetail from "./PendingWithdrawalDetail";
 import { Badge } from "@/components/ui/badge";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import AdminService from "../services/admin.service";
-import ViewDetail from "../features/users/ViewDetailDrawer";
+import { Separator } from "@/components/ui/separator";
+import RejectPendingWithdrawalDialog from "./RejectPendingWithdrawalDialog";
+import ApprovedPendingWithdrawalDialog from "./ApprovedPendingWithdrawalDialog";
 
-const fetchReferralUsers = async ({
-    page,
-    pageSize,
-    search,
-    searchFor,
-    sortBy,
-    sortDir,
-}) => {
+const fetchPendingWithdrawals = async ({ page, search, fromDate, toDate }) => {
     try {
-        const response = await AdminService.referralUsers({
+        const response = await AdminService.getWithdrawals({
+            withdrawalStatus: "pending",
             page,
-            pageSize,
             search,
-            searchFor,
-            sortBy,
-            sortDir,
+            fromDate,
+            toDate,
         });
 
         return response.data;
@@ -67,51 +68,56 @@ const reducerFn = (state, action) => {
             return { ...state, page: state.page + 1 };
         case "previousPage":
             return { ...state, page: state.page - 1 };
-        case "defaultPage":
-            return { ...state, page: 1 };
         case "search":
             return { ...state, search: action.value };
+        case "setFromDate":
+            return { ...state, fromDate: action.value };
+        case "setToDate":
+            return { ...state, toDate: action.value };
         case "clearFilter":
             return {
                 ...state,
-                search: undefined,
+                fromDate: undefined,
+                toDate: undefined,
+                search: "",
             };
-        default:
-            return state;
     }
 };
 
 const initialState = {
+    search: "",
     page: 1,
-    pageSize: 10,
-    search: undefined,
-    searchFor: undefined,
-    sortBy: undefined,
-    sortDir: "asc",
+    fromDate: undefined,
+    toDate: undefined,
 };
 
-export default function User() {
+export default function PendingWithdrawal() {
+    const [openDropdown, setOpenDropdown] = useState(null);
     const [state, dispatch] = useReducer(reducerFn, initialState);
     const debounceSearch = useDebounce(state.search, 500);
-
-    const { data, isLoading } = useQuery({
+    const { data, isLoading, refetch } = useQuery({
         queryKey: [
-            "pending-referrals",
+            "pending-withdrawals",
             debounceSearch,
             state.page,
-            state.searchFor,
-            state.sortBy,
-            state.sortDir,
+            state.search,
+            state.fromDate,
+            state.toDate,
         ],
         queryFn: () =>
-            fetchReferralUsers({
-                page: state.page,
+            fetchPendingWithdrawals({
                 search: debounceSearch,
-                searchFor: state.searchFor,
-                sortBy: state.sortBy,
-                sortDir: state.sortDir,
+                page: state.page,
+                fromDate: state.fromDate,
+                toDate: state.toDate,
             }),
     });
+
+    useEffect(() => {
+        if (!openDropdown) {
+            document.body.style.pointerEvents = "";
+        }
+    }, [openDropdown]);
 
     return (
         <>
@@ -119,7 +125,7 @@ export default function User() {
                 <div className="bg-cs-background-secondary px-4 py-3 border rounded-t-lg  gap-3 shadow-sm flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                            Referral Records
+                            Withdrawal Records
                         </h3>
                         <Badge variant="outline" className="px-3 py-1">
                             <span className="font-medium">
@@ -138,14 +144,14 @@ export default function User() {
                                         className="w-[150px] justify-start text-left font-normal"
                                     >
                                         <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {/* {state.fromDate ? (
+                                        {state.fromDate ? (
                                             format(
                                                 state.fromDate,
                                                 "MMM dd, yyyy"
                                             )
                                         ) : (
                                             <span>From date</span>
-                                        )} */}
+                                        )}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent
@@ -155,21 +161,21 @@ export default function User() {
                                     <Calendar
                                         mode="single"
                                         selected={state.fromDate}
-                                        // onSelect={(d) => {
-                                        //     dispatch({
-                                        //         type: "setFromDate",
-                                        //         value: d,
-                                        //     });
-                                        //     if (
-                                        //         state.toDate &&
-                                        //         d > state.toDate
-                                        //     ) {
-                                        //         dispatch({
-                                        //             type: "setToDate",
-                                        //             value: d,
-                                        //         });
-                                        //     }
-                                        // }}
+                                        onSelect={(d) => {
+                                            dispatch({
+                                                type: "setFromDate",
+                                                value: d,
+                                            });
+                                            if (
+                                                state.toDate &&
+                                                d > state.toDate
+                                            ) {
+                                                dispatch({
+                                                    type: "setToDate",
+                                                    value: d,
+                                                });
+                                            }
+                                        }}
                                         initialFocus
                                     />
                                 </PopoverContent>
@@ -182,14 +188,14 @@ export default function User() {
                                     <Button
                                         variant="outline"
                                         className="w-[150px] justify-start text-left font-normal"
-                                        // disabled={!state.fromDate}
+                                        disabled={!state.fromDate}
                                     >
                                         <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {/* {state.toDate ? (
+                                        {state.toDate ? (
                                             format(state.toDate, "MMM dd, yyyy")
                                         ) : (
                                             <span>To date</span>
-                                        )} */}
+                                        )}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent
@@ -199,36 +205,33 @@ export default function User() {
                                     <Calendar
                                         mode="single"
                                         selected={state.toDate}
-                                        // onSelect={(d) => {
-                                        //     dispatch({
-                                        //         type: "setToDate",
-                                        //         value: d,
-                                        //     });
-                                        //     if (d < state.fromDate) {
-                                        //         dispatch({
-                                        //             type: "setFromDate",
-                                        //             value: d,
-                                        //         });
-                                        //     }
-                                        // }}
+                                        onSelect={(d) => {
+                                            dispatch({
+                                                type: "setToDate",
+                                                value: d,
+                                            });
+                                            if (d < state.fromDate) {
+                                                dispatch({
+                                                    type: "setFromDate",
+                                                    value: d,
+                                                });
+                                            }
+                                        }}
                                         initialFocus
-                                        // fromDate={state.fromDate}
+                                        fromDate={state.fromDate}
                                     />
                                 </PopoverContent>
                             </Popover>
                         </div>
 
                         <div className="flex gap-2">
-                            {/* <FilterDialogReferral
-                                state={state}
-                                dispatch={dispatch}
-                            /> */}
+                            <FilterDialog state={state} dispatch={dispatch} />
 
                             <Button
                                 variant="ghost"
-                                // onClick={() =>
-                                //     dispatch({ type: "clearFilter" })
-                                // }
+                                onClick={() =>
+                                    dispatch({ type: "clearFilter" })
+                                }
                                 className="text-destructive hover:text-destructive/80"
                             >
                                 <X className="h-4 w-4" />
@@ -240,26 +243,36 @@ export default function User() {
                 <Table className="bg-cs-background-secondary rounded-b-md border max-h-[540px] relative">
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="pl-4 py-3.5 text-cs-foreground-primary font-base sticky top-0 z-1 bg-cs-background-secondary">
-                                Name
+                            <TableHead className="pl-4 py-3.5 text-cs-foreground-primary  font-base sticky top-0 z-1 bg-cs-background-secondary">
+                                ID
                             </TableHead>
-                            <TableHead className="py-3.5 text-cs-foreground-primary font-base sticky top-0 z-1 bg-cs-background-secondary">
+                            <TableHead className="py-3.5 text-cs-foreground-primary  font-base sticky top-0 z-1 bg-cs-background-secondary">
                                 Phone
                             </TableHead>
-                            <TableHead className="py-3.5 text-cs-foreground-primary font-base sticky top-0 z-1 bg-cs-background-secondary">
-                                Refer
+                            <TableHead className="py-3.5 text-cs-foreground-primary  font-base sticky top-0 z-1 bg-cs-background-secondary">
+                                Amount
+                            </TableHead>
+                            <TableHead className="py-3.5 text-cs-foreground-primary  font-base sticky top-0 z-1 bg-cs-background-secondary">
+                                Bank
                             </TableHead>
                             <TableHead className="py-3.5 text-cs-foreground-primary font-base sticky top-0 z-1 bg-cs-background-secondary">
-                                Earning
+                                <div className=" flex items-center gap-1.5">
+                                    <span>Account</span>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Info size={16} />
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Last 6 digit of account no.</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </div>
                             </TableHead>
                             <TableHead className="py-3.5 text-cs-foreground-primary font-base sticky top-0 z-1 bg-cs-background-secondary">
-                                Pending Withdrawal
+                                Request Date
                             </TableHead>
                             <TableHead className="py-3.5 text-cs-foreground-primary font-base sticky top-0 z-1 bg-cs-background-secondary">
-                                Balance
-                            </TableHead>
-                            <TableHead className="py-3.5 text-cs-foreground-primary font-base sticky top-0 z-1 bg-cs-background-secondary">
-                                Pending Balance
+                                Status
                             </TableHead>
                             <TableHead className="text-right pr-4 py-3.5 text-cs-foreground-primary  font-base sticky top-0 z-1 bg-cs-background-secondary">
                                 Actions
@@ -276,16 +289,13 @@ export default function User() {
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            data.referralUsers?.map((user) => (
-                                <TableRow key={user._id}>
+                            data.withdrawals.map((request) => (
+                                <TableRow key={request.withdrawal}>
                                     <TableCell className="pl-4 text-cs-foreground-primary">
-                                        {user.user.fullName}
+                                        {request.withdrawal_id}
                                     </TableCell>
                                     <TableCell className="text-cs-foreground-primary">
-                                        {user.user.mobileNum}
-                                    </TableCell>
-                                    <TableCell className="text-cs-foreground-primary">
-                                        {user.statusCounts[0].count}
+                                        {request.user.mobileNum}
                                     </TableCell>
                                     <TableCell className="text-cs-foreground-primary">
                                         <div className="flex items-center">
@@ -294,52 +304,42 @@ export default function User() {
                                                 className="mt-[1px]"
                                             />
                                             <span>
-                                                {user.wallet.totalEarning.toFixed(
-                                                    2
-                                                )}
+                                                {request.amount.toFixed(2)}
                                             </span>
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-cs-foreground-primary">
-                                        <div className="flex items-center">
-                                            <IndianRupee
-                                                size={12}
-                                                className="mt-[1px]"
-                                            />
-                                            <span>
-                                                {user.wallet.pendingWithdrawal.toFixed(
-                                                    2
-                                                )}
-                                            </span>
-                                        </div>
+                                        {request.bank.name}
                                     </TableCell>
                                     <TableCell className="text-cs-foreground-primary">
-                                        <div className="flex items-center">
-                                            <IndianRupee
-                                                size={12}
-                                                className="mt-[1px]"
-                                            />
-                                            <span>
-                                                {user.wallet.balance.toFixed(2)}
-                                            </span>
-                                        </div>
+                                        {request.bank.accountNumber.slice(
+                                            request.bank.accountNumber.length -
+                                                6
+                                        )}
                                     </TableCell>
                                     <TableCell className="text-cs-foreground-primary">
-                                        <div className="flex items-center">
-                                            <IndianRupee
-                                                size={12}
-                                                className="mt-[1px]"
-                                            />
-                                            <span>
-                                                {user.wallet.pendingBalance.toFixed(
-                                                    2
-                                                )}
-                                            </span>
-                                        </div>
+                                        {format(
+                                            request.createdAt,
+                                            "dd/MM/yyyy"
+                                        )}
                                     </TableCell>
-                                    <TableCell className="text-right pr-4">
+                                    <TableCell className="text-cs-foreground-primary">
+                                        <Status statusType={request.status} />
+                                    </TableCell>
+                                    <TableCell className="pr-4 text-right">
                                         <div className="flex justify-end">
-                                            <DropdownMenu>
+                                            <DropdownMenu
+                                                open={
+                                                    openDropdown === request._id
+                                                }
+                                                onOpenChange={(open) =>
+                                                    setOpenDropdown(
+                                                        open
+                                                            ? request._id
+                                                            : null
+                                                    )
+                                                }
+                                            >
                                                 <DropdownMenuTrigger asChild>
                                                     <Button
                                                         variant="ghost"
@@ -356,7 +356,7 @@ export default function User() {
                                                     className="bg-cs-background-primary"
                                                 >
                                                     <DropdownMenuLabel className="text-sm text-cs-foreground-primary font-medium">
-                                                        Menu
+                                                        Actions
                                                     </DropdownMenuLabel>
                                                     <Separator />
                                                     <DropdownMenuItem
@@ -365,8 +365,36 @@ export default function User() {
                                                             e.preventDefault();
                                                         }}
                                                     >
-                                                        <ViewDetail
-                                                            id={user._id}
+                                                        <PendingRequestDetail
+                                                            pendingRequest={
+                                                                request
+                                                            }
+                                                        />
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                        className="cursor-pointer"
+                                                        onSelect={(e) => {
+                                                            e.preventDefault();
+                                                        }}
+                                                    >
+                                                        <ApprovedPendingWithdrawalDialog
+                                                            withdrawalId={
+                                                                request._id
+                                                            }
+                                                            refetch={refetch}
+                                                        />
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                        className="cursor-pointer"
+                                                        onSelect={(e) => {
+                                                            e.preventDefault();
+                                                        }}
+                                                    >
+                                                        <RejectPendingWithdrawalDialog
+                                                            withdrawalId={
+                                                                request._id
+                                                            }
+                                                            refetch={refetch}
                                                         />
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
@@ -389,7 +417,7 @@ export default function User() {
                     Prev
                 </Button>
                 <Button variant="outline" disabled={true}>
-                    {state.page}
+                    {Math.ceil(data?.rows / 50)}
                 </Button>
                 <Button
                     variant="outline"

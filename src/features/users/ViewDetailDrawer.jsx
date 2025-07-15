@@ -10,20 +10,22 @@ import WithdrawalHistoryTable from "./WithdrawalHistoryTable";
 import PendingReferralTable from "./PendingReferralTable";
 import CompletedReferralTable from "./CompletedReferralTable";
 
+const fetchReferralUserDetail = async (id) => {
+    try {
+        const response = await AdminService.referralUserById(id);
+
+        console.log(response.data.referralUser);
+
+        return response.data.referralUser;
+    } catch (error) {
+        console.log("Error:", error.message);
+    }
+};
+
 export default function ViewDetail({ id }) {
-    const fetchAgent = async () => {
-        try {
-            const response = await AdminService.referralUserById(id);
-
-            return response.data?.referralUser;
-        } catch (error) {
-            console.log("Error:", error.message);
-        }
-    };
-
     const { data: referralUser, isLoading } = useQuery({
-        queryKey: ["agent-summary"],
-        queryFn: fetchAgent,
+        queryKey: ["referral-user-details"],
+        queryFn: () => fetchReferralUserDetail(id),
     });
 
     return (

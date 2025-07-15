@@ -3,7 +3,17 @@ import API from "../config/axios";
 const AdminService = {
     dashboardAnalytics: () => API.get("/admin/dashboard-analytics"),
 
-    agents: (params) => API.get("/admin/referral-users", { params }),
+    referralUsers: ({ page, pageSize, search, searchFor, sortBy, sortDir }) =>
+        API.get("/admin/referral-users", {
+            params: {
+                page,
+                pageSize,
+                search,
+                searchFor,
+                sortBy,
+                sortDir,
+            },
+        }),
 
     referralUserById: (referralUserId) =>
         API.get(`/admin/referral-user/${referralUserId}`),
@@ -29,17 +39,6 @@ const AdminService = {
             { remarks }
         ),
 
-    withdrawals: (withdrawalStatus, page, search, fromDate, toDate) =>
-        API.get("/admin/withdrawals", {
-            params: {
-                withdrawalStatus,
-                page,
-                search,
-                fromDate: fromDate || undefined,
-                toDate: toDate || undefined,
-            },
-        }),
-
     referralOverTimeData: (defineTime) =>
         API.get("/admin/referral-over-time", { params: { defineTime } }),
 
@@ -64,8 +63,39 @@ const AdminService = {
             scheduleTime,
         }),
 
-    getReferrals: (referralStatus, page) =>
-        API.get("/admin/referral", { params: { referralStatus, page } }),
+    getReferrals: ({
+        referralStatus,
+        page,
+        search,
+        fromDate,
+        toDate,
+        searchIn,
+        id,
+        searchIdIn,
+    }) =>
+        API.get("/admin/referral", {
+            params: {
+                referralStatus,
+                page,
+                search,
+                fromDate,
+                toDate,
+                searchIn,
+                id,
+                searchIdIn,
+            },
+        }),
+
+    getWithdrawals: ({ withdrawalStatus, page, search, fromDate, toDate }) =>
+        API.get("/admin/withdrawals", {
+            params: {
+                withdrawalStatus,
+                page,
+                search,
+                fromDate,
+                toDate,
+            },
+        }),
 };
 
 export default AdminService;

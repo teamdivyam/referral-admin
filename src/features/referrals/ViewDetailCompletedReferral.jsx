@@ -100,7 +100,7 @@ export default function ViewDetailCompletedReferral({ completedReferral }) {
                                 Name
                             </span>
                             <span className="text-sm text-cs-foreground-secondary flex items-center">
-                                {completedReferral.referrer_user_id.fullName ||
+                                {completedReferral.referrer.fullName ||
                                     "nil"}
                             </span>
                         </div>
@@ -109,7 +109,7 @@ export default function ViewDetailCompletedReferral({ completedReferral }) {
                                 Email
                             </span>
                             <span className="text-sm text-cs-foreground-secondary flex items-center">
-                                {completedReferral.referrer_user_id.email ||
+                                {completedReferral.referrer.email ||
                                     "nil"}
                             </span>
                         </div>
@@ -118,7 +118,7 @@ export default function ViewDetailCompletedReferral({ completedReferral }) {
                                 Phone
                             </span>
                             <span className="text-sm text-cs-foreground-secondary flex items-center">
-                                {completedReferral.referrer_user_id.mobileNum}
+                                {completedReferral.referrer.mobileNum}
                             </span>
                         </div>
                         <div className="font-medium text-cs-icon-primary">
@@ -130,7 +130,7 @@ export default function ViewDetailCompletedReferral({ completedReferral }) {
                                 Name
                             </span>
                             <span className="text-sm text-cs-foreground-secondary flex items-center">
-                                {completedReferral.referee_user_id.fullName ||
+                                {completedReferral.referee.fullName ||
                                     "nil"}
                             </span>
                         </div>
@@ -139,7 +139,7 @@ export default function ViewDetailCompletedReferral({ completedReferral }) {
                                 Email
                             </span>
                             <span className="text-sm text-cs-foreground-secondary flex items-center">
-                                {completedReferral.referee_user_id.email || "nil"}
+                                {completedReferral.referee.email || "nil"}
                             </span>
                         </div>
                         <div className="flex justify-between">
@@ -147,7 +147,7 @@ export default function ViewDetailCompletedReferral({ completedReferral }) {
                                 Phone
                             </span>
                             <span className="text-sm text-cs-foreground-secondary flex items-center">
-                                {completedReferral.referee_user_id.mobileNum}
+                                {completedReferral.referee.mobileNum}
                             </span>
                         </div>
                     </div>

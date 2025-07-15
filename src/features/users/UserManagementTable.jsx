@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import AdminService from "../../services/admin.service";
 import { useReducer } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,35 +25,37 @@ import {
     Calendar as CalendarIcon,
     IndianRupee,
 } from "lucide-react";
-import LoadingCircle from "../components/loading-circle";
-import { useDebounce } from "../hooks/useDebounce";
+import Status from "../common/Status";
+import LoadingCircle from "../../components/loading-circle";
+import { useDebounce } from "../../hooks/useDebounce";
 import { Calendar } from "@/components/ui/calendar";
-// import FilterDialogReferral from "./FilterDialogReferral";
+import FilterDialogReferral from "./FilterDialogReferral";
 import { Badge } from "@/components/ui/badge";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import AdminService from "../services/admin.service";
-import ViewDetail from "../features/users/ViewDetailDrawer";
 
-const fetchReferralUsers = async ({
+const fetchPendingReferrals = async ({
     page,
-    pageSize,
     search,
-    searchFor,
-    sortBy,
-    sortDir,
+    fromDate,
+    toDate,
+    searchIn,
+    id,
+    searchIdIn,
 }) => {
     try {
-        const response = await AdminService.referralUsers({
+        const response = await AdminService.getReferrals({
+            referralStatus: "pending",
             page,
-            pageSize,
             search,
-            searchFor,
-            sortBy,
-            sortDir,
+            fromDate,
+            toDate,
+            searchIn,
+            id,
+            searchIdIn,
         });
 
         return response.data;
@@ -61,57 +64,80 @@ const fetchReferralUsers = async ({
     }
 };
 
-const reducerFn = (state, action) => {
-    switch (action.type) {
-        case "nextPage":
-            return { ...state, page: state.page + 1 };
-        case "previousPage":
-            return { ...state, page: state.page - 1 };
-        case "defaultPage":
-            return { ...state, page: 1 };
-        case "search":
-            return { ...state, search: action.value };
-        case "clearFilter":
-            return {
-                ...state,
-                search: undefined,
-            };
-        default:
-            return state;
-    }
-};
+// const reducerFn = (state, action) => {
+//     switch (action.type) {
+//         case "nextPage":
+//             return { ...state, page: state.page + 1 };
+//         case "previousPage":
+//             return { ...state, page: state.page - 1 };
+//         case "defaultPage":
+//             return { ...state, page: 1 };
+//         case "search":
+//             return { ...state, search: action.value };
+//         case "setFromDate":
+//             return { ...state, fromDate: action.value };
+//         case "setToDate":
+//             return { ...state, toDate: action.value };
+//         case "setSearchIn":
+//             return { ...state, searchIn: action.value };
+//         case "setId":
+//             return { ...state, id: action.value };
+//         case "setSearchIdIn":
+//             return { ...state, searchIdIn: action.value };
+//         case "clearDate":
+//             return { ...state, fromDate: undefined, toDate: undefined };
+//         case "clearId":
+//             return { ...state, id: "" };
+//         case "clearFilter":
+//             return {
+//                 ...state,
+//                 fromDate: undefined,
+//                 toDate: undefined,
+//                 search: "",
+//                 id: "",
+//             };
+//         default:
+//             return state;
+//     }
+// };
 
-const initialState = {
-    page: 1,
-    pageSize: 10,
-    search: undefined,
-    searchFor: undefined,
-    sortBy: undefined,
-    sortDir: "asc",
-};
+// const initialState = {
+//     page: 1,
+//     fromDate: undefined,
+//     toDate: undefined,
+//     search: "",
+//     searchIn: "referrer",
+//     id: "",
+//     searchIdIn: "referId",
+// };
 
-export default function User() {
-    const [state, dispatch] = useReducer(reducerFn, initialState);
-    const debounceSearch = useDebounce(state.search, 500);
+export default function UserManagementTable() {
+    // const [state, dispatch] = useReducer(reducerFn, initialState);
+    // const debounceSearch = useDebounce(state.search, 500);
+    // const debounceSearchId = useDebounce(state.id, 500);
 
-    const { data, isLoading } = useQuery({
-        queryKey: [
-            "pending-referrals",
-            debounceSearch,
-            state.page,
-            state.searchFor,
-            state.sortBy,
-            state.sortDir,
-        ],
-        queryFn: () =>
-            fetchReferralUsers({
-                page: state.page,
-                search: debounceSearch,
-                searchFor: state.searchFor,
-                sortBy: state.sortBy,
-                sortDir: state.sortDir,
-            }),
-    });
+    // const { data, isLoading } = useQuery({
+    //     queryKey: [
+    //         "pending-referrals",
+    //         debounceSearch,
+    //         debounceSearchId,
+    //         state.page,
+    //         state.fromDate,
+    //         state.toDate,
+    //         state.searchIn,
+    //         state.searchIdIn,
+    //     ],
+    //     queryFn: () =>
+    //         fetchPendingReferrals({
+    //             page: state.page,
+    //             search: debounceSearch,
+    //             fromDate: state.fromDate,
+    //             toDate: state.toDate,
+    //             searchIn: state.searchIn,
+    //             id: debounceSearchId,
+    //             searchIdIn: state.searchIdIn,                
+    //         }),
+    // });
 
     return (
         <>
@@ -123,7 +149,7 @@ export default function User() {
                         </h3>
                         <Badge variant="outline" className="px-3 py-1">
                             <span className="font-medium">
-                                {data?.rows || 0}
+                                {/* {data?.rows || 0} */}
                             </span>{" "}
                             records found
                         </Badge>
@@ -276,66 +302,46 @@ export default function User() {
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            data.referralUsers?.map((user) => (
-                                <TableRow key={user._id}>
+                            data?.referrals.map((referral) => (
+                                <TableRow key={referral.ref_id}>
                                     <TableCell className="pl-4 text-cs-foreground-primary">
-                                        {user.user.fullName}
+                                        {/* {referral.ref_id} */}
                                     </TableCell>
                                     <TableCell className="text-cs-foreground-primary">
-                                        {user.user.mobileNum}
+                                        {/* {referral.referrer.fullName ||
+                                            referral.referrer.email ||
+                                            referral.referrer.mobileNum} */}
                                     </TableCell>
                                     <TableCell className="text-cs-foreground-primary">
-                                        {user.statusCounts[0].count}
+                                        {/* {referral.referee.fullName ||
+                                            referral.referee.email ||
+                                            referral.referee.mobileNum} */}
+                                    </TableCell>
+                                    <TableCell className="text-cs-foreground-primary">
+                                        {/* {format(
+                                            referral.createdAt,
+                                            "dd/MM/yyyy"
+                                        )} */}
+                                    </TableCell>
+                                    <TableCell className="text-cs-foreground-primary">
+                                        {/* {referral.order
+                                            .slice(referral.order.length - 4)
+                                            .toUpperCase()} */}
                                     </TableCell>
                                     <TableCell className="text-cs-foreground-primary">
                                         <div className="flex items-center">
-                                            <IndianRupee
+                                            {/* <IndianRupee
                                                 size={12}
                                                 className="mt-[1px]"
                                             />
                                             <span>
-                                                {user.wallet.totalEarning.toFixed(
-                                                    2
-                                                )}
-                                            </span>
+                                                {referral.amount.toFixed(2)}
+                                            </span> */}
                                         </div>
                                     </TableCell>
+
                                     <TableCell className="text-cs-foreground-primary">
-                                        <div className="flex items-center">
-                                            <IndianRupee
-                                                size={12}
-                                                className="mt-[1px]"
-                                            />
-                                            <span>
-                                                {user.wallet.pendingWithdrawal.toFixed(
-                                                    2
-                                                )}
-                                            </span>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className="text-cs-foreground-primary">
-                                        <div className="flex items-center">
-                                            <IndianRupee
-                                                size={12}
-                                                className="mt-[1px]"
-                                            />
-                                            <span>
-                                                {user.wallet.balance.toFixed(2)}
-                                            </span>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className="text-cs-foreground-primary">
-                                        <div className="flex items-center">
-                                            <IndianRupee
-                                                size={12}
-                                                className="mt-[1px]"
-                                            />
-                                            <span>
-                                                {user.wallet.pendingBalance.toFixed(
-                                                    2
-                                                )}
-                                            </span>
-                                        </div>
+                                        <Status statusType={referral.status} />
                                     </TableCell>
                                     <TableCell className="text-right pr-4">
                                         <div className="flex justify-end">
@@ -351,10 +357,7 @@ export default function User() {
                                                         <MoreHorizontal className="h-4 w-4" />
                                                     </Button>
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent
-                                                    align="end"
-                                                    className="bg-cs-background-primary"
-                                                >
+                                                <DropdownMenuContent align="end" className="bg-cs-background-primary">
                                                     <DropdownMenuLabel className="text-sm text-cs-foreground-primary font-medium">
                                                         Menu
                                                     </DropdownMenuLabel>
@@ -365,9 +368,7 @@ export default function User() {
                                                             e.preventDefault();
                                                         }}
                                                     >
-                                                        <ViewDetail
-                                                            id={user._id}
-                                                        />
+                                                        
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>

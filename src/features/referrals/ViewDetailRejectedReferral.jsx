@@ -89,7 +89,7 @@ export default function ViewDetailRejectedReferral({ rejectedReferral }) {
                                 Name
                             </span>
                             <span className="text-sm text-cs-foreground-secondary flex items-center">
-                                {rejectedReferral.referrer_user_id.fullName ||
+                                {rejectedReferral.referrer.fullName ||
                                     "nil"}
                             </span>
                         </div>
@@ -98,7 +98,7 @@ export default function ViewDetailRejectedReferral({ rejectedReferral }) {
                                 Email
                             </span>
                             <span className="text-sm text-cs-foreground-secondary flex items-center">
-                                {rejectedReferral.referrer_user_id.email ||
+                                {rejectedReferral.referrer.email ||
                                     "nil"}
                             </span>
                         </div>
@@ -107,7 +107,7 @@ export default function ViewDetailRejectedReferral({ rejectedReferral }) {
                                 Phone
                             </span>
                             <span className="text-sm text-cs-foreground-secondary flex items-center">
-                                {rejectedReferral.referrer_user_id.mobileNum}
+                                {rejectedReferral.referrer.mobileNum}
                             </span>
                         </div>
                         <div className="font-medium text-cs-icon-primary">
@@ -119,7 +119,7 @@ export default function ViewDetailRejectedReferral({ rejectedReferral }) {
                                 Name
                             </span>
                             <span className="text-sm text-cs-foreground-secondary flex items-center">
-                                {rejectedReferral.referee_user_id.fullName ||
+                                {rejectedReferral.referee.fullName ||
                                     "nil"}
                             </span>
                         </div>
@@ -128,7 +128,7 @@ export default function ViewDetailRejectedReferral({ rejectedReferral }) {
                                 Email
                             </span>
                             <span className="text-sm text-cs-foreground-secondary flex items-center">
-                                {rejectedReferral.referee_user_id.email || "nil"}
+                                {rejectedReferral.referee.email || "nil"}
                             </span>
                         </div>
                         <div className="flex justify-between">
@@ -136,7 +136,7 @@ export default function ViewDetailRejectedReferral({ rejectedReferral }) {
                                 Phone
                             </span>
                             <span className="text-sm text-cs-foreground-secondary flex items-center">
-                                {rejectedReferral.referee_user_id.mobileNum}
+                                {rejectedReferral.referee.mobileNum}
                             </span>
                         </div>
                     </div>

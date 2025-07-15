@@ -9,39 +9,45 @@ import {
 
 import { format } from "date-fns";
 
-export default function WithdrawalHistoryTable({ referralUser }) {
-    const withdrawalHistory = referralUser.wallet.withdrawals;
+export default function CompletedReferralTable({ referralUser }) {
+    const completeReferral = referralUser.referralEvents.filter(
+        (referral) => referral.status == "completed"
+    );
 
     return (
         <Table>
             <TableHeader>
                 <TableRow className="bg-cs-background-secondary">
-                    <TableHead>Request Date</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead className="text-right">Proccess Date</TableHead>
+                    <TableHead>Ref ID</TableHead>
+                    <TableHead>Created At</TableHead>
+                    <TableHead>Completed At</TableHead>
+                    <TableHead className="text-right">Amount</TableHead> 
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {withdrawalHistory.length === 0 ? (
+                {completeReferral.length === 0 ? (
                     <TableRow className="bg-cs-background-secondary">
                         <TableCell colSpan={4} className="h-24 text-center">
-                            No withdrawal history available
+                            No pending referral code available
                         </TableCell>
                     </TableRow>
                 ) : (
-                    withdrawalHistory.map((withdrawal, index) => (
+                    completeReferral.map((referral, index) => (
                         <TableRow
                             key={index}
                             className="bg-cs-background-secondary"
                         >
                             <TableCell className="font-medium">
-                                {format(withdrawal.createdAt, "dd/MM/yyyy")}
+                                {format(referral.updatedAt, "dd/MM/yyyy")}
+                            </TableCell> 
+                            <TableCell>
+                                #{referral.referee.slice(referral.referee.length - 5).toUpperCase()}
                             </TableCell>
-                            <TableCell>{withdrawal.status}</TableCell>
-                            <TableCell>{withdrawal.amount}</TableCell>
+                            <TableCell>
+                                #{referral.orderId.slice(referral.orderId.length - 5).toUpperCase()}
+                            </TableCell>
                             <TableCell className="text-right">
-                                {format(withdrawal.updatedAt, "dd/MM/yyyy")}
+                                {referral.amount}
                             </TableCell>
                         </TableRow>
                     ))

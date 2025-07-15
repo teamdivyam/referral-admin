@@ -11,40 +11,53 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useAxiosPost } from "../hooks/useAxios";
-import AuthService from "@/services/auth.service";
 import { Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner"
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { API_URL } from "../lib/constant";
+
+const fetchLogin = async (formData) => {
+    try {
+        const response = await axios.post(
+            `${API_URL}/auth/admin/login`,
+            formData
+        );
+
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
 export default function Login() {
-    const { fetchError, postData } = useAxiosPost({
-        adminService: AuthService.login,
-    });
     const navigate = useNavigate();
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
+        reset,
     } = useForm({
         resolver: joiResolver(loginSchema),
     });
 
-    const onSubmit = async (formValues) => {
-        try {
-            const response = await postData(formValues);
-
-            if (response.data.success) {
-                /* Destruct Authorization Token from Response
-                and Store token in localStorage */
-                const token = response.data.token;
-                localStorage.setItem("token", token);
-
-                await navigate("/dashboard");
+    const mutation = useMutation({
+        mutationFn: fetchLogin,
+        onSuccess: (data) => {
+            if (data.token) {
+                localStorage.setItem("token", data.token);
+                navigate("/dashboard");
             }
-        } catch (_) {
-            toast(fetchError);
-        }
+        },
+        onError: (error) => {
+            toast(error.response.data.error.message);
+            reset();
+        },
+    });
+
+    const onSubmit = async (formData) => {
+        mutation.mutate(formData);
     };
 
     return (
@@ -97,7 +110,7 @@ export default function Login() {
                                         className="w-full"
                                         disabled={isSubmitting}
                                     >
-                                        {isSubmitting ? (
+                                        {mutation.isPending ? (
                                             <>
                                                 <Loader2 className="animate-spin" />
                                                 <span>Logging</span>

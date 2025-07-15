@@ -178,6 +178,11 @@
   }
 } */
 
+body {
+  pointer-events: auto !important;
+  overflow-x: hidden;
+}
+
 .rotateImg {
   animation: rotate 15s infinite linear;
   transform-origin: center center;

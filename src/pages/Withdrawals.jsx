@@ -1,26 +1,57 @@
+import PendingWithdrawal from "../features/withdrawals/PendingWithdrawal";
+import ApprovedWithdrawals from "../features/withdrawals/ApprovedWithdrawal";
+import RejectedWithdrawals from "../features/withdrawals/RejectedWithdrawal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import LatestWithdrawals from "../features/withdrawals/LatestWithdrawals";
-import ApprovedWithdrawals from "../features/withdrawals/ApprovedWithdrawals";
-import RejectedWithdrawals from "../features/withdrawals/RejectedWithdrawals";
+import { CheckCircle2, Clock, XCircle } from "lucide-react";
+import { useEffect } from "react";
 
 export default function Withdrawals() {
     return (
         <>
-            <Tabs defaultValue="pending" className="">
-                <TabsList className="grid w-full grid-cols-3 bg-cs-foreground-secondary">
-                    <TabsTrigger className="cursor-pointer" value="pending">
-                        Pending
+            <Tabs defaultValue="pending" className="w-full">
+                <TabsList className="grid w-full max-w-lg grid-cols-3 gap-2 p-1.5 bg-transparent rounded-xl h-12">
+                    <TabsTrigger
+                        className="rounded-lg data-[state=active]:bg-yellow-500 data-[state=active]:text-white 
+                        data-[state=active]:shadow-sm data-[state=inactive]:bg-white dark:data-[state=active]:bg-white 
+                        dark:data-[state=active]:text-black data-[state=inactive]:border-slate-300 data-[state=inactive]:border-2 
+                        dark:data-[state=inactive]:bg-transparent transition-all duration-200"
+                        value="pending"
+                    >
+                        <div className="flex items-center space-x-2">
+                            <Clock className="w-4 h-4" />
+                            <span>Pending</span>
+                        </div>
                     </TabsTrigger>
-                    <TabsTrigger className="cursor-pointer" value="approved">
-                        Approved
+                    <TabsTrigger
+                        className="rounded-lg data-[state=active]:bg-emerald-500 
+                        data-[state=active]:text-white data-[state=active]:shadow-sm dark:data-[state=active]:bg-white 
+                        dark:data-[state=active]:text-black 
+                        data-[state=inactive]:bg-white data-[state=inactive]:border-slate-300 
+                        data-[state=inactive]:border-2 dark:data-[state=inactive]:bg-transparent  transition-all duration-200"
+                        value="approved"
+                    >
+                        <div className="flex items-center space-x-2">
+                            <CheckCircle2 className="w-4 h-4" />
+                            <span>Approved</span>
+                        </div>
                     </TabsTrigger>
-                    <TabsTrigger className="cursor-pointer" value="rejected">
-                        Rejected
+                    <TabsTrigger
+                        className="rounded-lg data-[state=active]:bg-destructive 
+                        data-[state=active]:text-white data-[state=active]:shadow-sm dark:data-[state=active]:bg-white 
+                        dark:data-[state=active]:text-black
+                        data-[state=inactive]:bg-white data-[state=inactive]:border-slate-300 
+                        data-[state=inactive]:border-2 dark:data-[state=inactive]:bg-transparent transition-all duration-200"
+                        value="rejected"
+                    >
+                        <div className="flex items-center space-x-2">
+                            <XCircle className="w-4 h-4" />
+                            <span>Rejected</span>
+                        </div>
                     </TabsTrigger>
                 </TabsList>
                 <TabsContent value="pending">
                     <div className="mt-4.5">
-                        <LatestWithdrawals />
+                        <PendingWithdrawal />
                     </div>
                 </TabsContent>
                 <TabsContent value="approved">

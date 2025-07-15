@@ -1,10 +1,10 @@
-import ApprovedDetails from "../withdrawals/ApprovedDetails";
-import RejectedDetails from "../withdrawals/RejectedDetails";
+import ApprovedWithdrawalDetails from "../withdrawals/ApprovedWithdrawalDetails";
+import RejectedWithdrawalDetail from "../withdrawals/RejectedWithdrawalDetail";
 
 export default function DetailPayout({ payout }) {
     if (payout.status === "approved") {
-        return <ApprovedDetails approvedDetails={payout} />;
+        return <ApprovedWithdrawalDetails approvedRequest={payout} />;
     } else if (payout.status === "rejected") {
-        return <RejectedDetails rejectedDetails={payout} />;
+        return <RejectedWithdrawalDetail rejectedRequest={payout} />;
     }
 }

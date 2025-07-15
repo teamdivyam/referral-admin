@@ -9,14 +9,22 @@ import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Clock, RefreshCw, CircleDollarSign, CalendarDays, Zap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const fetchReferralSettings = async () => {
     try {
@@ -41,7 +49,7 @@ const updateReferralSettings = async ({ name, value }) => {
     }
 };
 
-const updateReferralSchedule = async ({schedule, scheduleTime}) => {
+const updateReferralSchedule = async ({ schedule, scheduleTime }) => {
     console.log(schedule, scheduleTime);
     try {
         const response = await AdminService.updateReferralSchedule(
@@ -226,195 +234,285 @@ export default function Referral() {
 
     return (
         <div>
-            <h2 className="text-2xl text-cs-foreground-primary font-medium">
-                Referral Settings
-            </h2>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <CircleDollarSign className="h-5 w-5 text-blue-500" />
+                        <span>Referral Program Settings</span>
+                    </CardTitle>
+                </CardHeader>
 
-            <div className="flex mt-8 flex-col gap-3.5">
-                {referralSettings.map((elem, index) => (
-                    <div className="flex flex-col gap-2.5 xl:flex-row xl:justify-between xl:items-center">
-                        <Label>{elem.label}</Label>
-                        <div className="flex gap-2.5">
-                            {isLoading ? (
-                                <LoadingCircle />
-                            ) : (
-                                <Input
-                                    type="number"
-                                    value={state[elem.name]}
-                                    disabled={!editIndex[index]}
-                                    className={`${
-                                        editIndex[index] &&
-                                        "border-cs-icon-primary"
-                                    } bg-blue-100`}
-                                    onChange={(e) =>
-                                        dispatch({
-                                            type: elem.name,
-                                            value: e.target.value,
-                                        })
-                                    }
-                                />
-                            )}
-                            <Button
-                                onClick={() => handleEditButton(index)}
-                                className={`${
-                                    editIndex[index] ? "hidden" : ""
-                                } bg-red-400 hover:bg-red-500`}
-                            >
-                                Edit
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    mutation.mutate({
-                                        name: elem.name,
-                                        value: state[elem.name],
-                                    });
-                                }}
-                                className={`${
-                                    !editIndex[index] ? "hidden" : ""
-                                } bg-green-400 hover:bg-green-500`}
-                            >
-                                Save
-                            </Button>
+                <CardContent className="space-y-6">
+                    {/* Referral Limits Section */}
+                    <div className="space-y-4">
+                        <h3 className="font-medium flex items-center gap-2">
+                            <RefreshCw className="h-4 w-4" />
+                            Referral Limits
+                        </h3>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {referralSettings.map((elem, index) => (
+                                <div key={index} className="space-y-2">
+                                    <Label className="text-sm font-medium">
+                                        {elem.label}
+                                    </Label>
+                                    <div className="flex gap-2">
+                                        {isLoading ? (
+                                            <LoadingCircle />
+                                        ) : (
+                                            <Input
+                                                type="number"
+                                                value={state[elem.name]}
+                                                disabled={!editIndex[index]}
+                                                className={`${
+                                                    editIndex[index]
+                                                        ? "ring-1 ring-blue-500"
+                                                        : ""
+                                                }`}
+                                                onChange={(e) =>
+                                                    dispatch({
+                                                        type: elem.name,
+                                                        value: e.target.value,
+                                                    })
+                                                }
+                                            />
+                                        )}
+                                        <div className="flex gap-2">
+                                            <Button
+                                                variant={
+                                                    editIndex[index]
+                                                        ? "outline"
+                                                        : "default"
+                                                }
+                                                size="sm"
+                                                onClick={() =>
+                                                    handleEditButton(index)
+                                                }
+                                                className={
+                                                    editIndex[index]
+                                                        ? "hidden"
+                                                        : ""
+                                                }
+                                            >
+                                                Edit
+                                            </Button>
+                                            <Button
+                                                variant="default"
+                                                size="sm"
+                                                onClick={() => {
+                                                    mutation.mutate({
+                                                        name: elem.name,
+                                                        value: state[elem.name],
+                                                    });
+                                                }}
+                                                className={
+                                                    !editIndex[index]
+                                                        ? "hidden"
+                                                        : ""
+                                                }
+                                            >
+                                                Save
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
-                ))}
-                <div className="flex mt-2.5 justify-between items-center px-2.5 py-2.5 rounded-md bg-blue-100">
-                    <Label>Referral Processing Script</Label>
-                    <div className="flex flex-col xl:gap-2.5 items-end">
-                        {isLoadingCron ? (
-                            <LoadingCircle />
-                        ) : (
-                            <Switch
-                                checked={runScript}
-                                onCheckedChange={() => {
-                                    mutationCron.mutate(
-                                        runScript ? "stop" : "start"
-                                    );
-                                }}
-                                className={cn(
-                                    "data-[state=checked]:bg-cs-icon-primary data-[state=unchecked]:bg-slate-500 cursor-pointer"
+
+                    {/* Script Control Section */}
+                    <div className="space-y-4">
+                        <h3 className="font-medium flex items-center gap-2">
+                            <Zap className="h-4 w-4" />
+                            Script Control
+                        </h3>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Processing Script */}
+                            <Card className="p-4">
+                                <div className="flex items-center justify-between">
+                                    <div className="space-y-1">
+                                        <Label className="font-medium">
+                                            Processing Script
+                                        </Label>
+                                        <p className="text-sm text-muted-foreground">
+                                            {runScript ? "Active" : "Inactive"}
+                                        </p>
+                                    </div>
+                                    {isLoadingCron ? (
+                                        <LoadingCircle />
+                                    ) : (
+                                        <div className="flex items-center gap-2">
+                                            <Badge
+                                                variant={
+                                                    runScript
+                                                        ? "default"
+                                                        : "outline"
+                                                }
+                                            >
+                                                {runScript
+                                                    ? "Running"
+                                                    : "Stopped"}
+                                            </Badge>
+                                            <Switch
+                                                checked={runScript}
+                                                onCheckedChange={() => {
+                                                    mutationCron.mutate(
+                                                        runScript
+                                                            ? "stop"
+                                                            : "start"
+                                                    );
+                                                }}
+                                                className={cn(
+                                                    "data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-gray-300"
+                                                )}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-2">
+                                    Last Execution:{" "}
+                                    {(!isLoadingCron &&
+                                        cronData?.lastExecution) ||
+                                        "N/A"}
+                                </p>
+                            </Card>
+
+                            {/* Scheduled Script */}
+                            <Card className="p-4">
+                                <div className="flex items-center justify-between mb-2">
+                                    <Label className="font-medium">
+                                        Scheduled Script
+                                    </Label>
+                                    <Button
+                                        variant={
+                                            editSchedule ? "outline" : "default"
+                                        }
+                                        size="sm"
+                                        onClick={() =>
+                                            setEditSchedule(!editSchedule)
+                                        }
+                                    >
+                                        {editSchedule ? "Cancel" : "Edit"}
+                                    </Button>
+                                </div>
+
+                                {isLoadingCron ? (
+                                    <LoadingCircle />
+                                ) : (
+                                    <div className="space-y-3">
+                                        <div className="flex gap-2">
+                                            <Select
+                                                value={state.referralScript.schedule.toString()}
+                                                onValueChange={(value) => {
+                                                    dispatch({
+                                                        type: "scheduleTime",
+                                                        value: value,
+                                                    });
+                                                }}
+                                                disabled={!editSchedule}
+                                            >
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Interval" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        {Array.from({
+                                                            length:
+                                                                schedule[
+                                                                    state
+                                                                        ?.referralScript
+                                                                        ?.scheduleTime
+                                                                ]?.max || 0,
+                                                        }).map((_, index) => (
+                                                            <SelectItem
+                                                                key={index}
+                                                                value={index.toString()}
+                                                            >
+                                                                {index}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+
+                                            <Select
+                                                value={
+                                                    state.referralScript
+                                                        .scheduleTime
+                                                }
+                                                onValueChange={(value) =>
+                                                    dispatch({
+                                                        type: "scheduleDuration",
+                                                        value: value,
+                                                    })
+                                                }
+                                                disabled={!editSchedule}
+                                            >
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Unit" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        {Object.keys(
+                                                            schedule
+                                                        ).map((elem, index) => (
+                                                            <SelectItem
+                                                                key={index}
+                                                                value={elem.toString()}
+                                                            >
+                                                                {elem
+                                                                    .charAt(0)
+                                                                    .toUpperCase() +
+                                                                    elem.slice(
+                                                                        1
+                                                                    )}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+
+                                        {editSchedule && (
+                                            <Button
+                                                className="w-full"
+                                                onClick={() => {
+                                                    mutationSchedule.mutate({
+                                                        schedule:
+                                                            state.referralScript
+                                                                .schedule,
+                                                        scheduleTime:
+                                                            state.referralScript
+                                                                .scheduleTime,
+                                                    });
+                                                    setEditSchedule(false);
+                                                }}
+                                            >
+                                                Update Schedule
+                                            </Button>
+                                        )}
+
+                                        <p className="text-xs text-muted-foreground">
+                                            Current: Every{" "}
+                                            {state.referralScript.schedule}{" "}
+                                            {state.referralScript.scheduleTime}
+                                        </p>
+                                    </div>
                                 )}
-                            />
-                        )}
-                        <span className="text-xs">
-                            Last Execution:{" "}
-                            {(!isLoadingCron && cronData?.lastExecution) ||
-                                "null"}
-                        </span>
+                            </Card>
+                        </div>
                     </div>
-                </div>
-                <div className="flex mt-2.5 justify-between items-center px-2.5 py-2.5 rounded-md bg-blue-100">
-                    <Label>Scheduled Referral Script</Label>
-                    <div className="flex flex-col xl:gap-2.5 items-end">
-                        {isLoadingCron ? (
-                            <LoadingCircle />
-                        ) : (
-                            <div className="flex gap-2">
-                                <Select
-                                    value={state.referralScript.schedule.toString()}
-                                    onValueChange={(value) => {
-                                        dispatch({
-                                            type: "scheduleTime",
-                                            value: value,
-                                        });
-                                    }}
-                                    disabled={!editSchedule}
-                                >
-                                    <SelectTrigger className="w-[120px] bg-cs-background-secondary">
-                                        <SelectValue placeholder="Set Time" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            {Array.from({
-                                                length:
-                                                    schedule[
-                                                        state?.referralScript
-                                                            ?.scheduleTime
-                                                    ]?.max || 0,
-                                            }).map((_, index) => (
-                                                <SelectItem
-                                                    value={index.toString()}
-                                                >
-                                                    {index}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
+                </CardContent>
 
-                                <Select
-                                    value={state.referralScript.scheduleTime}
-                                    onValueChange={(value) =>
-                                        dispatch({
-                                            type: "scheduleDuration",
-                                            value: value,
-                                        })
-                                    }
-                                    disabled={!editSchedule}
-                                >
-                                    <SelectTrigger className="w-[140px] bg-cs-background-secondary">
-                                        <SelectValue placeholder="Set Duration" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            {Object.keys(schedule).map(
-                                                (elem, index) => (
-                                                    <SelectItem
-                                                        key={index}
-                                                        value={elem.toString()}
-                                                    >
-                                                        {elem}
-                                                    </SelectItem>
-                                                )
-                                            )}
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-
-                                <Button
-                                    onClick={() => setEditSchedule(true)}
-                                    className={`${
-                                        editSchedule ? "hidden" : ""
-                                    } bg-red-400 hover:bg-red-500`}
-                                >
-                                    Edit
-                                </Button>
-                                <Button
-                                    onClick={() => {
-                                        console.log(
-                                            "schedule:",
-                                            state.referralScript.schedule
-                                        );
-                                        console.log(
-                                            "scheduleTime:",
-                                            state.referralScript.scheduleTime
-                                        );
-                                        mutationSchedule.mutate({
-                                            schedule:
-                                                state.referralScript.schedule,
-                                            scheduleTime:
-                                                state.referralScript
-                                                    .scheduleTime,
-                                        });
-                                        setEditSchedule(false);
-                                    }}
-                                    className={`${
-                                        !editSchedule ? "hidden" : ""
-                                    } bg-green-400 hover:bg-green-500`}
-                                >
-                                    Save
-                                </Button>
-                            </div>
-                        )}
-                        <span className="text-xs">
-                            Current Schedule:{" "}
-                            {isLoadingCron
-                                ? "null"
-                                : `Every ${state.referralScript.schedule} ${state.referralScript.scheduleTime}`}
-                        </span>
-                    </div>
-                </div>
-            </div>
+                <CardFooter className="bg-muted/50 py-3 px-4">
+                    <p className="text-xs text-muted-foreground">
+                        <Clock className="inline h-3 w-3 mr-1" />
+                        Changes may take a few minutes to propagate through the
+                        system.
+                    </p>
+                </CardFooter>
+            </Card>
         </div>
     );
 }

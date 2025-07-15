@@ -1,77 +1,103 @@
 import { useQuery } from "@tanstack/react-query";
 import BarChart from "../../components/charts/BarChart";
 import SelectTimeRange from "@/features/dashboard/SelectTimeRange";
-import { ChartNoAxesColumn, Dot } from "lucide-react";
+import { BarChart as BarChartIcon, Dot, Calendar } from "lucide-react";
 import { useState } from "react";
 import AdminService from "../../services/admin.service";
 import LoadingCircle from "../../components/loading-circle";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const chartConfig = {
-    referral: {
-        label: "Referral",
-        color: "#2563eb",
-        theme: {
-            light: "#2563eb",
-            dark: "#dc2626",
-        },
+  referral: {
+    label: "Referral Activity",
+    color: "#3b82f6",
+    theme: {
+      light: "#3b82f6",
+      dark: "#60a5fa",
     },
+  },
 };
 
 const fetchReferralOverTimeDate = async (defineTime) => {
-    try {
-        const response = await AdminService.referralOverTimeData(defineTime);
-        return response.data;
-    } catch (error) {
-        console.error(
-            "Error in fetching referral over time:",
-            error.response?.data?.error?.message || "fetch error"
-        );
-    }
+  try {
+    const response = await AdminService.referralOverTimeData(defineTime);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error in fetching referral over time:",
+      error.response?.data?.error?.message || "fetch error"
+    );
+    throw error;
+  }
 };
 
 export default function ReferralOverTimeChart() {
-    const [defineTime, setDefineTime] = useState("last7Days");
-    const { data, isLoading, isError } = useQuery({
-        queryKey: ["referralOverTime", defineTime],
-        queryFn: () => fetchReferralOverTimeDate(defineTime),
-    });
+  const [defineTime, setDefineTime] = useState("last7Days");
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["referralOverTime", defineTime],
+    queryFn: () => fetchReferralOverTimeDate(defineTime),
+  });
 
-    return (
-        <div className="row-span-2 col-span-5 lg:col-span-3 bg-cs-background-secondary px-6 py-6.5 rounded-xl shadow-sm">
-            <div className="flex justify-between">
-                <SelectTimeRange
-                    defineTime={defineTime}
-                    setDefineTime={setDefineTime}
-                />
-                <div className="px-2 py-1.5 bg-cs-background-primary rounded-lg">
-                    <ChartNoAxesColumn className="text-cs-icon-primary" />
-                </div>
-            </div>
-            {/* <div className="flex justify-between mt-8">
-                <div className="flex items-center">
-                    <Dot className="text-green-400" size={36} />
-                    <span className="-translate-x-2 text-sm text-cs-foreground-primary">
-                        Total:{" "}
-                    </span>
-                    <span className="text-sm text-cs-foreground-secondary">
-                        4
-                    </span>
-                </div>
-            </div> */}
-            {isLoading ? (
-                <div className="w-full h-64 flex justify-center items-center ">
-                    <LoadingCircle />
-                </div>
-            ) : (
-                <div className="mt-16">
-                    <div className="">
-                        <BarChart
-                            chartData={data?.referralOverTimeData}
-                            chartConfig={chartConfig}
-                        />
-                    </div>
-                </div>
+  // Calculate total referrals for the selected period
+  const totalReferrals = data?.referralOverTimeData?.reduce(
+    (sum, item) => sum + (item.refers || 0),
+    0
+  );
+
+  return (
+    <Card className="col-span-5 lg:col-span-3 bg-cs-background-secondary">
+      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+        <div className="space-y-1">
+          <CardTitle className="text-lg font-semibold">
+            Referral Activity
+          </CardTitle>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-sm font-normal">
+              <Calendar className="h-3 w-3 mr-1" />
+              {defineTime === "last7Days"
+                ? "Last 7 Days"
+                : defineTime === "thisMonth"
+                ? "This Month"
+                : "Last Month"}
+            </Badge>
+            {totalReferrals && (
+              <Badge variant="secondary" className="text-sm">
+                {totalReferrals} Referrals
+              </Badge>
             )}
+          </div>
         </div>
-    );
+        <SelectTimeRange
+          defineTime={defineTime}
+          setDefineTime={setDefineTime}
+        />
+      </CardHeader>
+      <CardContent>
+        {isLoading ? (
+          <div className="h-64 flex items-center justify-center">
+            <LoadingCircle size="lg" />
+          </div>
+        ) : isError ? (
+          <div className="h-64 flex flex-col items-center justify-center gap-4 text-red-500">
+            <BarChartIcon className="h-8 w-8" />
+            <p>Failed to load referral data</p>
+            <Button
+              variant="outline"
+              onClick={() => window.location.reload()}
+            >
+              Retry
+            </Button>
+          </div>
+        ) : (
+          <div className="mt-4">
+            <BarChart
+              chartData={data?.referralOverTimeData}
+              chartConfig={chartConfig}
+            />
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
 }
