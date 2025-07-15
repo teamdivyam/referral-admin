@@ -285,7 +285,7 @@ export default function User() {
                                         {user.user.mobileNum}
                                     </TableCell>
                                     <TableCell className="text-cs-foreground-primary">
-                                        {user.statusCounts[0].count}
+                                        {user.referralStats.completed}
                                     </TableCell>
                                     <TableCell className="text-cs-foreground-primary">
                                         <div className="flex items-center">

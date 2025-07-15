@@ -71,7 +71,15 @@ export default function RejectPendingWithdrawalDialog({
                         Reject
                     </span>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px] bg-cs-background-secondary">
+                <DialogContent
+                    className="sm:max-w-[425px] bg-cs-background-secondary"
+                    onKeyDown={(e) => e.stopPropagation()}
+                    onPointerDownOutside={(e) => {
+                        if (isSubmitting) {
+                            e.preventDefault();
+                        }
+                    }}
+                >
                     <DialogHeader>
                         <DialogTitle>Reject Withdrawal</DialogTitle>
                     </DialogHeader>
@@ -79,6 +87,7 @@ export default function RejectPendingWithdrawalDialog({
                         <div className="grid gap-3">
                             <Label htmlFor="username-1">Remarks</Label>
                             <Input
+                                type="text"
                                 value={remarks}
                                 onChange={(e) => setRemarks(e.target.value)}
                             />

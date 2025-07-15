@@ -1,7 +1,8 @@
 import API from "../config/axios";
 
 const AuthService = {
-    login: (formData) => API.post("/auth/admin/login", formData),
+    login: ({ email, password }) =>
+        API.post("/auth/admin/login", { email, password }),
 };
 
 export default AuthService;

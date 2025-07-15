@@ -16,16 +16,13 @@ import { Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { API_URL } from "../lib/constant";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import AuthService from "../services/auth.service";
 
-const fetchLogin = async (formData) => {
+const fetchLogin = async ({ email, password }) => {
     try {
-        const response = await axios.post(
-            `${API_URL}/auth/admin/login`,
-            formData
-        );
+        const response = await AuthService.login({ email, password });
+
         return response.data;
     } catch (error) {
         throw error;
@@ -61,7 +58,8 @@ export default function Login() {
     });
 
     const onSubmit = async (formData) => {
-        mutation.mutate(formData);
+        const { email, password } = formData;
+        mutation.mutate({ email, password });
     };
 
     //

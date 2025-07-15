@@ -89,7 +89,7 @@ export default function ApprovedPendingWithdrawalDialog({
         setIsOpen(open);
         if (!open) {
             dispatch({ type: "reset" });
-        }  
+        }
     };
 
     return (
@@ -107,6 +107,7 @@ export default function ApprovedPendingWithdrawalDialog({
                             e.preventDefault();
                         }
                     }}
+                    onKeyDown={(e) => e.stopPropagation()}
                 >
                     <DialogHeader>
                         <DialogTitle>Approved Withdrawal</DialogTitle>
