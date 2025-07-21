@@ -231,3 +231,13 @@ body {
   border-radius: 4px;
   cursor: pointer;
 }
+
+.rotate-anticlockwise {
+  animation: anticlockwise-spin 1s linear infinite;
+}
+
+@keyframes anticlockwise-spin {
+  to {
+    transform: rotate(-360deg);
+  }
+}

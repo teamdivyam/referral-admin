@@ -234,7 +234,7 @@ export default function Referral() {
 
     return (
         <div>
-            <Card>
+            <Card className="bg-cs-background-secondary">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <CircleDollarSign className="h-5 w-5 text-blue-500" />
@@ -264,7 +264,7 @@ export default function Referral() {
                                                 type="number"
                                                 value={state[elem.name]}
                                                 disabled={!editIndex[index]}
-                                                className={`${
+                                                className={`bg-cs-background-primary dark:bg-cs-background-primary ${
                                                     editIndex[index]
                                                         ? "ring-1 ring-blue-500"
                                                         : ""
@@ -329,7 +329,7 @@ export default function Referral() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* Processing Script */}
-                            <Card className="p-4">
+                            <Card className="p-4 bg-cs-background-primary">
                                 <div className="flex items-center justify-between">
                                     <div className="space-y-1">
                                         <Label className="font-medium">
@@ -379,7 +379,7 @@ export default function Referral() {
                             </Card>
 
                             {/* Scheduled Script */}
-                            <Card className="p-4">
+                            <Card className="p-4 bg-cs-background-primary">
                                 <div className="flex items-center justify-between mb-2">
                                     <Label className="font-medium">
                                         Scheduled Script

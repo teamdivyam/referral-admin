@@ -6,7 +6,7 @@ export default function MyProfile() {
     return (
         <div className="space-y-6">
             {/* Profile Header */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="bg-cs-background-secondary flex flex-col sm:flex-row items-start sm:items-center gap-6 p-6 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
                 <div className="relative">
                     <img
                         src="https://placehold.co/400"
@@ -54,17 +54,17 @@ export default function MyProfile() {
 
             {/* Admin Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+                <div className="bg-cs-background-secondary  p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
                     <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Total Users</h3>
                     <p className="text-2xl font-bold text-gray-900 dark:text-white">1,248</p>
                     <p className="text-sm text-green-600 dark:text-green-400 mt-1">+12% from last month</p>
                 </div>
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+                <div className="bg-cs-background-secondary  p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
                     <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Active Sessions</h3>
                     <p className="text-2xl font-bold text-gray-900 dark:text-white">42</p>
                     <p className="text-sm text-blue-600 dark:text-blue-400 mt-1">5 new today</p>
                 </div>
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+                <div className="bg-cs-background-secondary  p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
                     <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">System Health</h3>
                     <div className="flex items-center gap-2">
                         <div className="h-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full">
@@ -77,7 +77,7 @@ export default function MyProfile() {
             </div>
 
             {/* Recent Activity */}
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="bg-cs-background-secondary  p-6 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h3>
                 <div className="space-y-4">
                     {[

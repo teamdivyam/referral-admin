@@ -96,6 +96,19 @@ const AdminService = {
                 toDate,
             },
         }),
+
+    getSessions: () => API.get("/admin/sessions"),
+    revokeSessions: ({ sessionId }) =>
+        API.patch("/admin/sessions", {
+            sessionId,
+        }),
+    logout: () => API.patch("/admin/logout"),
+    resetPassword: ({ currentPassword, newPassword, confirmPassword }) =>
+        API.patch("/admin/reset-password", {
+            currentPassword,
+            newPassword,
+            confirmPassword,
+        }),
 };
 
 export default AdminService;

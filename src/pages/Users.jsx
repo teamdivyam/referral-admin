@@ -7,7 +7,6 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
 import { useReducer } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,24 +17,13 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
-import {
-    MoreHorizontal,
-    X,
-    Calendar as CalendarIcon,
-    IndianRupee,
-} from "lucide-react";
+import { MoreHorizontal, X, IndianRupee, RotateCcw } from "lucide-react";
 import LoadingCircle from "../components/loading-circle";
 import { useDebounce } from "../hooks/useDebounce";
-import { Calendar } from "@/components/ui/calendar";
-// import FilterDialogReferral from "./FilterDialogReferral";
 import { Badge } from "@/components/ui/badge";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
 import AdminService from "../services/admin.service";
 import ViewDetail from "../features/users/ViewDetailDrawer";
+import UserFilterDialog from "../features/users/UserFilterDialog";
 
 const fetchReferralUsers = async ({
     page,
@@ -83,7 +71,7 @@ const reducerFn = (state, action) => {
 
 const initialState = {
     page: 1,
-    pageSize: 10,
+    pageSize: 20,
     search: undefined,
     searchFor: undefined,
     sortBy: undefined,
@@ -94,7 +82,7 @@ export default function User() {
     const [state, dispatch] = useReducer(reducerFn, initialState);
     const debounceSearch = useDebounce(state.search, 500);
 
-    const { data, isLoading } = useQuery({
+    const { data, isLoading, refetch, isRefetching } = useQuery({
         queryKey: [
             "pending-referrals",
             debounceSearch,
@@ -106,6 +94,7 @@ export default function User() {
         queryFn: () =>
             fetchReferralUsers({
                 page: state.page,
+                pageSize: state.pageSize,
                 search: debounceSearch,
                 searchFor: state.searchFor,
                 sortBy: state.sortBy,
@@ -129,106 +118,26 @@ export default function User() {
                         </Badge>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-2">
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        className="w-[150px] justify-start text-left font-normal"
-                                    >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {/* {state.fromDate ? (
-                                            format(
-                                                state.fromDate,
-                                                "MMM dd, yyyy"
-                                            )
-                                        ) : (
-                                            <span>From date</span>
-                                        )} */}
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                    className="w-auto p-0"
-                                    align="start"
-                                >
-                                    <Calendar
-                                        mode="single"
-                                        selected={state.fromDate}
-                                        // onSelect={(d) => {
-                                        //     dispatch({
-                                        //         type: "setFromDate",
-                                        //         value: d,
-                                        //     });
-                                        //     if (
-                                        //         state.toDate &&
-                                        //         d > state.toDate
-                                        //     ) {
-                                        //         dispatch({
-                                        //             type: "setToDate",
-                                        //             value: d,
-                                        //         });
-                                        //     }
-                                        // }}
-                                        initialFocus
-                                    />
-                                </PopoverContent>
-                            </Popover>
-
-                            <span className="text-gray-500 mx-1">to</span>
-
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        className="w-[150px] justify-start text-left font-normal"
-                                        // disabled={!state.fromDate}
-                                    >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {/* {state.toDate ? (
-                                            format(state.toDate, "MMM dd, yyyy")
-                                        ) : (
-                                            <span>To date</span>
-                                        )} */}
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                    className="w-auto p-0"
-                                    align="start"
-                                >
-                                    <Calendar
-                                        mode="single"
-                                        selected={state.toDate}
-                                        // onSelect={(d) => {
-                                        //     dispatch({
-                                        //         type: "setToDate",
-                                        //         value: d,
-                                        //     });
-                                        //     if (d < state.fromDate) {
-                                        //         dispatch({
-                                        //             type: "setFromDate",
-                                        //             value: d,
-                                        //         });
-                                        //     }
-                                        // }}
-                                        initialFocus
-                                        // fromDate={state.fromDate}
-                                    />
-                                </PopoverContent>
-                            </Popover>
+                    <div className="flex items-center gap-2.5">
+                        <div className="flex gap-1.5 items-center pr-4">
+                            <RotateCcw
+                                className={`cursor-pointer ${
+                                    isRefetching && "rotate-anticlockwise"
+                                }`}
+                                onClick={refetch}
+                                size={16}
+                            />
                         </div>
-
                         <div className="flex gap-2">
-                            {/* <FilterDialogReferral
+                            <UserFilterDialog
                                 state={state}
                                 dispatch={dispatch}
-                            /> */}
-
+                            />
                             <Button
                                 variant="ghost"
-                                // onClick={() =>
-                                //     dispatch({ type: "clearFilter" })
-                                // }
+                                onClick={() =>
+                                    dispatch({ type: "clearFilter" })
+                                }
                                 className="text-destructive hover:text-destructive/80"
                             >
                                 <X className="h-4 w-4" />
@@ -248,6 +157,12 @@ export default function User() {
                             </TableHead>
                             <TableHead className="py-3.5 text-cs-foreground-primary font-base sticky top-0 z-1 bg-cs-background-secondary">
                                 Refer
+                            </TableHead>
+                            <TableHead className="py-3.5 text-cs-foreground-primary font-base sticky top-0 z-1 bg-cs-background-secondary">
+                                Completed
+                            </TableHead>
+                            <TableHead className="py-3.5 text-cs-foreground-primary font-base sticky top-0 z-1 bg-cs-background-secondary">
+                                Rejected
                             </TableHead>
                             <TableHead className="py-3.5 text-cs-foreground-primary font-base sticky top-0 z-1 bg-cs-background-secondary">
                                 Earning
@@ -285,7 +200,13 @@ export default function User() {
                                         {user.user.mobileNum}
                                     </TableCell>
                                     <TableCell className="text-cs-foreground-primary">
+                                        {user.referralStats.total}
+                                    </TableCell>
+                                    <TableCell className="text-cs-foreground-primary">
                                         {user.referralStats.completed}
+                                    </TableCell>
+                                    <TableCell className="text-cs-foreground-primary">
+                                        {user.referralStats.rejected}
                                     </TableCell>
                                     <TableCell className="text-cs-foreground-primary">
                                         <div className="flex items-center">
@@ -389,13 +310,15 @@ export default function User() {
                     Prev
                 </Button>
                 <Button variant="outline" disabled={true}>
-                    {state.page}
+                    {`${state.page} of ${Math.ceil(
+                        data?.rows / state.pageSize
+                    )}`}
                 </Button>
                 <Button
                     variant="outline"
                     disabled={
                         data?.rows === 0 ||
-                        state.page === Math.ceil(data?.rows / 50)
+                        state.page === Math.ceil(data?.rows / state.pageSize)
                     }
                     onClick={() => dispatch({ type: "nextPage" })}
                 >

@@ -35,7 +35,7 @@ export default function Settings() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
                 {/* Navigation Panel */}
                 <div className="lg:col-span-3">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div className="bg-cs-background-secondary rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                                 Setting Menu
@@ -74,7 +74,7 @@ export default function Settings() {
 
                 {/* Content Area */}
                 <div className="lg:col-span-9">
-                    <div className=" dark:bg-gray-800 rounded-lg dark:border-gray-700 overflow-hidden">
+                    <div className="rounded-lg dark:border-gray-700 overflow-hidden">
                         <div className="space-y-6">
                             {settingMenu[currentMenu].comp}
                         </div>

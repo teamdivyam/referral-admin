@@ -1,6 +1,7 @@
 import SummaryAnalytics from "@/features/dashboard/SummaryAnalytics";
 import ReferralOverTimeChart from "../features/dashboard/ReferralOverTimeChart";
 import LatestPayout from "../features/dashboard/LatestPayout";
+import SetAdminToken from "../features/dashboard/Test";
 
 export default function Dashboard() {
     return (
@@ -10,6 +11,7 @@ export default function Dashboard() {
                 <ReferralOverTimeChart />
                 <LatestPayout />
             </div>
+            <SetAdminToken />
         </div>
     );
 }
