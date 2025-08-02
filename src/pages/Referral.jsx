@@ -3,14 +3,19 @@ import PendingReferral from "../features/referrals/PendingReferral";
 import CompletedReferral from "../features/referrals/CompletedReferral";
 import RejectedReferral from "../features/referrals/RejectedReferral";
 import { Clock, CheckCircle2, XCircle } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 
 export default function Referral() {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const tab = searchParams.get("tab") || "pending";
+
     return (
         <div>
-            <Tabs defaultValue="pending" className="w-full">
+            <Tabs defaultValue={tab} className="w-full">
                 <TabsList className="grid w-full max-w-lg grid-cols-3 gap-2 p-1.5 bg-transparent rounded-xl h-12">
                     <TabsTrigger
                         value="pending"
+                        onClick={() => setSearchParams({ tab: "pending" })}
                         className="rounded-lg data-[state=active]:bg-yellow-500 data-[state=active]:text-white 
                         data-[state=active]:shadow-sm dark:data-[state=active]:bg-white 
                         dark:data-[state=active]:text-black data-[state=inactive]:bg-white 
@@ -24,6 +29,7 @@ export default function Referral() {
                     </TabsTrigger>
                     <TabsTrigger
                         value="completed"
+                        onClick={() => setSearchParams({ tab: "completed" })}
                         className="rounded-lg data-[state=active]:bg-emerald-500 data-[state=active]:text-white 
                         data-[state=active]:shadow-sm dark:data-[state=active]:bg-white 
                         dark:data-[state=active]:text-black data-[state=inactive]:bg-white 
@@ -37,6 +43,8 @@ export default function Referral() {
                     </TabsTrigger>
                     <TabsTrigger
                         value="rejected"
+                        onClick={() => setSearchParams({ tab: "rejected" })}
+
                         className="rounded-lg data-[state=active]:bg-destructive data-[state=active]:text-white 
                         data-[state=active]:shadow-sm dark:data-[state=active]:bg-white 
                         dark:data-[state=active]:text-black data-[state=inactive]:bg-white 

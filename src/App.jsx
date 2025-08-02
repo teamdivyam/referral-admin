@@ -4,17 +4,18 @@ import { Toaster } from "@/components/ui/sonner";
 import { ErrorBoundary } from "react-error-boundary";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ErrorFallback from "./features/ErrorFallback";
+import AuthProvider from "./contexts/AuthContext";
 
 function App() {
     const queryClient = new QueryClient({
         defaultOptions: {
             queries: {
-                staleTime: 5 * 60 * 1000,   // 5 minutes
-                cacheTime: 10 * 60 * 1000,  // 10 minutes
+                staleTime: 5 * 60 * 1000, // 5 minutes
+                cacheTime: 10 * 60 * 1000, // 10 minutes
                 refetchOnWindowFocus: true,
                 refetchOnReconnect: true,
-            }
-        }
+            },
+        },
     });
 
     const handleReset = () => {
@@ -23,9 +24,14 @@ function App() {
 
     return (
         <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-            <ErrorBoundary FallbackComponent={ErrorFallback} onReset={handleReset}>
+            <ErrorBoundary
+                FallbackComponent={ErrorFallback}
+                onReset={handleReset}
+            >
                 <QueryClientProvider client={queryClient}>
-                    <AppRoutes />
+                    <AuthProvider>
+                        <AppRoutes />
+                    </AuthProvider>
                     <Toaster />
                 </QueryClientProvider>
             </ErrorBoundary>

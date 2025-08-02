@@ -91,7 +91,7 @@ export default function SummaryAnalytics() {
                 icon={Users}
                 link="/users"
                 loading={isLoading}
-                onClick={() => setCurrentPage(1)}
+                onClick={() => setCurrentPage(2)}
             />
 
             <StatCard
@@ -119,7 +119,9 @@ export default function SummaryAnalytics() {
                 title="Referral Orders"
                 value={data?.totalOrdersCompleted}
                 icon={Sigma}
+                link="/referral?tab=completed"
                 loading={isLoading}
+                onClick={() => setCurrentPage(1)}
             />
         </div>
     );

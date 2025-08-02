@@ -1,8 +1,12 @@
 import { Shield, Mail, Phone, Calendar, User, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import useAuth from '../../hooks/useAuth';
+import { formatDate } from 'date-fns';
 
 export default function MyProfile() {
+    const { authData } = useAuth();
+
     return (
         <div className="space-y-6">
             {/* Profile Header */}
@@ -22,31 +26,31 @@ export default function MyProfile() {
                 <div className="flex-1">
                     <div className="flex justify-between items-start">
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Adesh Singh</h2>
-                            <p className="text-gray-600 dark:text-gray-300">Head Administrator</p>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{authData.name || "--"}</h2>
+                            <p className="text-gray-600 dark:text-gray-300">{authData.role}</p>
                         </div>
-                        <Button variant="outline" size="sm">
+                        {/* <Button variant="outline" size="sm">
                             <Settings className="h-4 w-4 mr-2" />
                             Edit Profile
-                        </Button>
+                        </Button> */}
                     </div>
                     
                     <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="flex items-center gap-3 text-sm">
                             <Mail className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                            <span className="text-gray-700 dark:text-gray-300">adesh@company.com</span>
+                            <span className="text-gray-700 dark:text-gray-300">{authData.email || "--"}</span>
                         </div>
                         <div className="flex items-center gap-3 text-sm">
                             <Phone className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                            <span className="text-gray-700 dark:text-gray-300">+91 98765 43210</span>
+                            <span className="text-gray-700 dark:text-gray-300">{authData.phone || "--"}</span>
                         </div>
                         <div className="flex items-center gap-3 text-sm">
                             <Calendar className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                            <span className="text-gray-700 dark:text-gray-300">Joined: Jan 15, 2022</span>
+                            <span className="text-gray-700 dark:text-gray-300">Joined: --</span>
                         </div>
                         <div className="flex items-center gap-3 text-sm">
                             <User className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                            <span className="text-gray-700 dark:text-gray-300">Admin ID: ADM-1001</span>
+                            <span className="text-gray-700 dark:text-gray-300">ID: {authData.adminId || "--"}</span>
                         </div>
                     </div>
                 </div>

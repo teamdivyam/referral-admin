@@ -13,11 +13,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AuthService from "../services/auth.service";
+import useAuth from "../hooks/useAuth";
+import { useEffect } from "react";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const fetchLogin = async ({ email, password }) => {
     try {
@@ -31,6 +34,8 @@ const fetchLogin = async ({ email, password }) => {
 
 export default function Login() {
     const navigate = useNavigate();
+    const { isAuthenticated, loading, setAuthData } = useAuth();
+
     const {
         register,
         handleSubmit,
@@ -45,14 +50,11 @@ export default function Login() {
         onSuccess: (data) => {
             if (data.token) {
                 localStorage.setItem("token", data.token);
-                navigate("/dashboard");
+                setAuthData(data.admin);
             }
         },
         onError: (error) => {
-                toast.error(
-                error.response?.data?.error?.message ||
-                    "Login failed. Please try again."
-            );
+            toast.error(error.response?.data?.message || "Login failed");
             reset();
         },
     });
@@ -61,6 +63,16 @@ export default function Login() {
         const { email, password } = formData;
         mutation.mutate({ email, password });
     };
+
+    useEffect(() => {
+        if (!loading && isAuthenticated) {
+            navigate("/dashboard", { replace: true });
+        }
+    }, [isAuthenticated, loading, navigate]);
+
+    if (loading || isAuthenticated) {
+        return <LoadingSpinner fullScreen />;
+    }
 
     return (
         <div className="min-h-svh w-full bg-gradient-to-br from-slate-900 to-slate-700 flex items-center justify-center p-4">

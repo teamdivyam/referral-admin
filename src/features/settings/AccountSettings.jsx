@@ -39,6 +39,7 @@ const fetchRevokeSession = async ({ sessionId }) => {
 };
 
 export default function AccountSettings() {
+    const token = localStorage.getItem("token");
     const {
         data: sessionData,
         isLoading,
@@ -91,7 +92,7 @@ export default function AccountSettings() {
                         </div>
 
                         {/* Two-Factor Auth */}
-                        <div className="space-y-2">
+                        {/* <div className="space-y-2">
                             <Label className="flex items-center gap-2">
                                 <Key className="h-4 w-4" />
                                 Two-Factor Authentication
@@ -105,7 +106,7 @@ export default function AccountSettings() {
                             <p className="text-xs text-muted-foreground">
                                 Add an extra layer of security
                             </p>
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Active Sessions */}
@@ -116,87 +117,102 @@ export default function AccountSettings() {
                         </Label>
                         <div className="rounded-lg border p-4 bg-cs-background-primary">
                             {!isLoading &&
-                                sessionData.sessions.map((session, i) => (
-                                    <div>
-                                        <div className="flex items-center justify-between bg-cs-background-primary">
-                                            <div>
-                                                <p className="font-medium">
-                                                    {session.device.browser} •{" "}
-                                                    {session.device.os}
-                                                </p>
-                                                <p className="text-sm text-muted-foreground">
-                                                    Last Activity •{" "}
-                                                    {formatDistanceToNow(
-                                                        session.lastActivity
-                                                    )}
-                                                </p>
+                                sessionData.sessions.map(
+                                    (session, i) =>
+                                        session.token !== token && (
+                                            <div key={i}>
+                                                <div className="flex items-center justify-between bg-cs-background-primary">
+                                                    <div>
+                                                        <p className="font-medium">
+                                                            {
+                                                                session.device
+                                                                    .browser
+                                                            }{" "}
+                                                            •{" "}
+                                                            {session.device.os}
+                                                        </p>
+                                                        <p className="text-sm text-muted-foreground">
+                                                            Last Activity •{" "}
+                                                            {session.lastActivity &&
+                                                                formatDistanceToNow(
+                                                                    session.lastActivity
+                                                                )}
+                                                        </p>
+                                                    </div>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="text-red-500"
+                                                        onClick={() => {
+                                                            revokeMutate.mutate(
+                                                                {
+                                                                    sessionId:
+                                                                        session._id,
+                                                                }
+                                                            );
+                                                        }}
+                                                    >
+                                                        Revoke
+                                                    </Button>
+                                                </div>
+                                                <Separator className="my-3" />
                                             </div>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="text-red-500"
-                                                onClick={() => {
-                                                    revokeMutate.mutate({ sessionId: session._id})
-                                                }}
-                                            >
-                                                Revoke
-                                            </Button>
-                                        </div>
-                                        <Separator className="my-3" />
-                                    </div>
-                                ))}
+                                        )
+                                )}
                         </div>
                     </div>
                 </CardContent>
             </Card>
 
             {/* Personal Information Card */}
-            <Card className="bg-cs-background-secondary">
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <User className="h-5 w-5 text-blue-500" />
-                        <span>Personal Information</span>
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <Label>Full Name</Label>
-                            <Input
-                                defaultValue="Adesh Singh"
-                                className="bg-cs-background-primary dark:bg-cs-background-primary"
-                            />
+            {/* <form>
+                <Card className="bg-cs-background-secondary">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <User className="h-5 w-5 text-blue-500" />
+                            <span>Personal Information</span>
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label>Full Name</Label>
+                                <Input
+                                    defaultValue="Adesh Singh"
+                                    className="bg-cs-background-primary dark:bg-cs-background-primary"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Email</Label>
+                                <Input
+                                    defaultValue="admin@example.com"
+                                    type="email"
+                                    className="bg-cs-background-primary dark:bg-cs-background-primary"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Phone Number</Label>
+                                <Input
+                                    defaultValue="+1 (555) 123-4567"
+                                    type="tel"
+                                    className="bg-cs-background-primary dark:bg-cs-background-primary"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Admin ID</Label>
+                                <Input
+                                    defaultValue="ADM-1001"
+                                    disabled
+                                    className="bg-cs-background-primary dark:bg-cs-background-primary"
+                                />
+                            </div>
                         </div>
-                        <div className="space-y-2">
-                            <Label>Email</Label>
-                            <Input
-                                defaultValue="admin@example.com"
-                                type="email"
-                                className="bg-cs-background-primary dark:bg-cs-background-primary"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Phone Number</Label>
-                            <Input
-                                defaultValue="+1 (555) 123-4567"
-                                type="tel"
-                                className="bg-cs-background-primary dark:bg-cs-background-primary"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Admin ID</Label>
-                            <Input
-                                defaultValue="ADM-1001"
-                                disabled
-                                className="bg-cs-background-primary dark:bg-cs-background-primary"
-                            />
-                        </div>
-                    </div>
-                </CardContent>
-                <CardFooter className="flex justify-end">
-                    <Button>Save Changes</Button>
-                </CardFooter>
-            </Card>
+                    </CardContent>
+                    <CardFooter className="flex justify-end">
+                        <Button>Save Changes</Button>
+                    </CardFooter>
+                </Card>
+            </form> */}
 
             {/* Notification Preferences Card */}
             <Card className="bg-cs-background-secondary">

@@ -8,14 +8,11 @@ import {
     Moon,
     Sun,
     LifeBuoy,
-    MessageSquare,
-    BookOpen,
     ChevronDown,
     User,
     Settings,
     LogOut,
 } from "lucide-react";
-import ModeToggle from "./mode-toggle";
 import { useContext, useEffect, useState } from "react";
 import { PageContext } from "../contexts/PageContext";
 import SidebarTrigger from "./sidebar-trigger";
@@ -34,13 +31,15 @@ import useTheme from "../hooks/useTheme";
 const pageHeaders = {
     dashboard: { title: "Main Dashboard", index: 0 },
     referral: { title: "Referral", index: 1 },
-    users: { title: "Users Management", index: 2 },
     withdrawals: {
         title: "Withdrawals",
-        index: 3,
+        index: 2,
     },
-    help: { title: "Helps", index: 4 },
-    settings: { title: "Settings", index: 5 },
+    users: { title: "Users Management", index: 3 },
+    admins: { title: "Admin Management", index: 4 },
+
+    help: { title: "Helps", index: 5 },
+    settings: { title: "Settings", index: 6 },
 };
 
 export default function Layout() {
@@ -139,18 +138,22 @@ export default function Layout() {
                                     align="end"
                                     className="w-56"
                                 >
-                                    <DropdownMenuItem className="cursor-pointer">
-                                        <LifeBuoy className="mr-2 h-4 w-4" />
-                                        <span>Help Center</span>
+                                    <DropdownMenuItem asChild>
+                                        <Link to="/help" className="cursor-pointer">
+                                            <LifeBuoy className="mr-2 h-4 w-4" />
+                                            <span>Help Center</span>
+                                        </Link>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem className="cursor-pointer">
-                                        <MessageSquare className="mr-2 h-4 w-4" />
-                                        <span>Contact Support</span>
+                                    <DropdownMenuItem asChild>
+                                        <Link to="#" className="cursor-pointer">
+                                            <LifeBuoy className="mr-2 h-4 w-4" />
+                                            <span>Contact Support</span>
+                                        </Link>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem className="cursor-pointer">
+                                    {/* <DropdownMenuItem className="cursor-pointer">
                                         <BookOpen className="mr-2 h-4 w-4" />
                                         <span>Documentation</span>
-                                    </DropdownMenuItem>
+                                    </DropdownMenuItem> */}
                                 </DropdownMenuContent>
                             </DropdownMenu>
 
@@ -174,19 +177,19 @@ export default function Layout() {
                                     className="w-40"
                                 >
                                     <DropdownMenuItem
-                                    onClick={() => setTheme("light")}
+                                        onClick={() => setTheme("light")}
                                     >
                                         <Sun className="mr-2 h-4 w-4" />
                                         <span>Light</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
-                                    onClick={() => setTheme("dark")}
+                                        onClick={() => setTheme("dark")}
                                     >
                                         <Moon className="mr-2 h-4 w-4" />
                                         <span>Dark</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
-                                    onClick={() => setTheme("dark")}
+                                        onClick={() => setTheme("dark")}
                                     >
                                         <Monitor className="mr-2 h-4 w-4" />
                                         <span>System</span>
@@ -216,17 +219,13 @@ export default function Layout() {
                                         My Account
                                     </DropdownMenuLabel>
                                     <DropdownMenuItem asChild>
-                                        <Link
-                                            to="/settings"
-                                        >
+                                        <Link to="/settings">
                                             <User className="h-4 w-4" />
                                             <span>Profile</span>
                                         </Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem asChild>
-                                        <Link
-                                            to="/settings"
-                                        >
+                                        <Link to="/settings">
                                             <Settings className="h-4 w-4" />
                                             <span>Settings</span>
                                         </Link>

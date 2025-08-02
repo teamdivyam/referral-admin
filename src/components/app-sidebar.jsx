@@ -27,6 +27,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useMutation } from "@tanstack/react-query";
 import AdminService from "../services/admin.service";
 import { toast } from "sonner";
+import useAuth from "../hooks/useAuth";
 
 const sidebarNavigationLinks = [
     {
@@ -46,12 +47,6 @@ const sidebarNavigationLinks = [
             },
             {
                 index: 2,
-                menuTitle: "User Management",
-                menuURL: "/users",
-                menuIcon: Users,
-            },
-            {
-                index: 3,
                 menuTitle: "Withdrawals",
                 menuURL: "/withdrawals",
                 menuIcon: Wallet,
@@ -59,16 +54,33 @@ const sidebarNavigationLinks = [
         ],
     },
     {
+        groupLabel: "MANAGEMENT",
+        groupContent: [
+            {
+                index: 3,
+                menuTitle: "User",
+                menuURL: "/users",
+                menuIcon: Info,
+            },
+            {
+                index: 4,
+                menuTitle: "Admin",
+                menuURL: "/admins",
+                menuIcon: Settings,
+            },
+        ],
+    },
+    {
         groupLabel: "ACCOUNT",
         groupContent: [
             {
-                index: 4,
+                index: 5,
                 menuTitle: "Help Center",
                 menuURL: "/help",
                 menuIcon: Info,
             },
             {
-                index: 5,
+                index: 6,
                 menuTitle: "Settings",
                 menuURL: "/settings",
                 menuIcon: Settings,
@@ -80,7 +92,6 @@ const sidebarNavigationLinks = [
 const fetchLogoutSession = async () => {
     try {
         const response = await AdminService.logout();
-
         return response.data;
     } catch (error) {
         console.error(error);
@@ -89,15 +100,14 @@ const fetchLogoutSession = async () => {
 
 export function AppSidebar({ sidebarOpen, setSidebarOpen }) {
     const { currentPage, setCurrentPage } = useContext(PageContext);
-    const navigate = useNavigate();
+    const { setAuthData } = useAuth();
 
     const mutateLogout = useMutation({
         mutationFn: fetchLogoutSession,
         onSuccess: (data) => {
             toast(data.message);
-            setTimeout(() => {
-                navigate("/login");
-            }, 2000);
+            localStorage.removeItem("token");
+            setAuthData(null);
         },
     });
 

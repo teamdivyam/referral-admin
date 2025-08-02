@@ -109,6 +109,11 @@ const AdminService = {
             newPassword,
             confirmPassword,
         }),
+    verifyAdmin: () => API.get("/admin/verify-admin"),
+    getAdmins: () => API.get("/admin/get-admins"),
+    deleteAdmin: (adminId) => API.delete(`/admin/delete-admin/${adminId}`),
+    createAdmin: ({ name, email, role, password }) =>
+        API.post("/admin/create-admin", { name, email, role, password }),
 };
 
 export default AdminService;
